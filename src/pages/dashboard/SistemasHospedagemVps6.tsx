@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { AlertCircle, CalendarDays, CheckCircle2, CircleDollarSign, Clock3, Loader2, Server, ShieldCheck } from 'lucide-react';
+import { AlertCircle, CalendarDays, CheckCircle2, CircleDollarSign, Clock3, Loader2, ShieldCheck } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { useApiModules } from '@/hooks/useApiModules';
@@ -203,7 +203,7 @@ const SistemasHospedagemVps6 = () => {
           title="VPS 6 MESES"
           subtitle="Após a compra, as configurações e IP serão enviados por e-mail após configuração do administrador"
           onBack={() => navigate('/dashboard')}
-          icon={<Server className="h-5 w-5" />}
+          
         />
 
         <div className="mt-4 md:mt-6 grid grid-cols-1 md:grid-cols-2 md:items-start gap-4 md:gap-6 lg:gap-8">
