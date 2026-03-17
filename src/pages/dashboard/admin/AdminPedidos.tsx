@@ -1467,7 +1467,7 @@ const AdminPedidos = () => {
                             className="gap-1"
                           >
                             {cancelingPedido ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Ban className="h-3.5 w-3.5" />}
-                            {cancelingPedido ? 'Cancelando...' : 'Cancelar pedido'}
+                            {cancelingPedido ? 'Excluindo...' : 'Excluir pedido'}
                           </Button>
                         )}
                       </div>
