@@ -200,7 +200,7 @@ const SistemasHospedagemVps6 = () => {
     <div className="space-y-4 md:space-y-6 max-w-full overflow-x-hidden">
       <div className="w-full">
         <SimpleTitleBar
-          title="VPS 6 MESES"
+          title="VPS 1 MÊS"
           subtitle="Após a compra, as configurações e IP serão enviados por e-mail após configuração do administrador"
           onBack={() => navigate('/dashboard')}
           icon={<Server className="h-5 w-5" />}
