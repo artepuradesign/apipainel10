@@ -398,9 +398,9 @@ function App() {
                     <Route path="/dashboard/pdf-personalizado" element={<DashboardLayout><PdfPersonalizado /></DashboardLayout>} />
                     <Route path="/dashboard/sistemas-dominio-com" element={<DashboardLayout><SistemasDominioCom /></DashboardLayout>} />
                     <Route path="/dashboard/sistemas-dominio-com-br" element={<DashboardLayout><SistemasDominioComBr /></DashboardLayout>} />
-                    <Route path="/dashboard/sistemas-hospedagem-vps-1-mes" element={<DashboardLayout><SistemasHospedagemVps1Mes /></DashboardLayout>} />
+                    <Route path="/dashboard/sistemas-hospedagem-vps-1" element={<DashboardLayout><SistemasHospedagemVps1Mes /></DashboardLayout>} />
                     <Route path="/dashboard/sistemas-hospedagem-vps-6" element={<DashboardLayout><SistemasHospedagemVps6 /></DashboardLayout>} />
-                    <Route path="/dashboard/sistemas-hospedagem-vps-1-ano" element={<DashboardLayout><SistemasHospedagemVps1Ano /></DashboardLayout>} />
+                    <Route path="/dashboard/sistemas-hospedagem-vps-1a" element={<DashboardLayout><SistemasHospedagemVps1Ano /></DashboardLayout>} />
                     <Route path="/dashboard/meus-pedidos" element={<DashboardLayout><MeusPedidos /></DashboardLayout>} />
                     <Route path="/dashboard/qrcode" element={<DashboardLayout><QRCodePage /></DashboardLayout>} />
                     <Route path="/dashboard/qrcode-rg-6m" element={<DashboardLayout><QRCodeRg6m /></DashboardLayout>} />
