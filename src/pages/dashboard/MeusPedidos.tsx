@@ -635,7 +635,8 @@ const MeusPedidos = () => {
           setShowModal(true);
         }
       } else {
-        const res = await sistemasHospedagemVps6Service.getById(pedido.id);
+        const vpsService = resolveVpsServiceByDuration(pedido.duracao_meses);
+        const res = await vpsService.getById(pedido.id);
         if (res.success && res.data) {
           const p = res.data;
           const mappedStatus = mapModuleStatusToUnified('vps-6', p.status as ModuleWorkflowStatus);
