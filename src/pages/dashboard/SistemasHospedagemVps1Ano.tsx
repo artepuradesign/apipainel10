@@ -242,14 +242,124 @@ const SistemasHospedagemVps6 = () => {
                         R$ {formatPrice(finalPrice)}
                       </span>
                     </div>
-...
+                  </div>
+                </div>
+              </div>
+            </CardHeader>
+
+            <CardContent className="space-y-4">
+              <div className="grid gap-1.5">
+                <Label htmlFor="nomeSolicitante" className="text-sm font-medium">Nome do Solicitante *</Label>
+                <Input
+                  id="nomeSolicitante"
+                  placeholder="Seu nome completo"
+                  value={nomeSolicitante}
+                  onChange={(e) => setNomeSolicitante(e.target.value)}
+                />
+              </div>
+
+              <div className="grid gap-1.5">
+                <Label htmlFor="nomeInstancia" className="text-sm font-medium">Nome da Instância</Label>
+                <Input
+                  id="nomeInstancia"
+                  placeholder="ex: vps-cliente-01"
+                  value={nomeInstancia}
+                  onChange={(e) => setNomeInstancia(e.target.value)}
+                />
+              </div>
+
+              <div className="rounded-md border border-border p-3 text-sm space-y-1.5">
+                <div className="flex items-center gap-2 font-medium">
+                  <ShieldCheck className="h-4 w-4 text-primary" />
+                  Configuração Linux padrão inclusa
+                </div>
+                <p className="text-muted-foreground">{DEFAULT_CONFIG}</p>
+                <p className="text-muted-foreground">Duração: 12 meses</p>
+              </div>
+
+              <Button type="button" onClick={openConfirmModal} disabled={!canRegister} className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
+                Contratar VPS
+              </Button>
+
               {!hasSufficientBalance && (
                 <div className="flex items-center gap-2 text-destructive text-sm leading-relaxed">
                   <AlertCircle className="h-4 w-4" />
                   <span>Saldo insuficiente. Gere o PIX para pagar R$ {formatPrice(finalPrice)}</span>
                 </div>
               )}
-...
+            </CardContent>
+          </Card>
+
+          <div className="space-y-4">
+            <Card className="overflow-hidden border-border/70 shadow-sm h-full">
+              <CardHeader className="pb-3 border-b bg-muted/30">
+                <div className="flex items-center justify-between gap-3 flex-wrap">
+                  <CardTitle className="text-base md:text-lg font-semibold tracking-tight">Minhas VPS</CardTitle>
+                  <Badge variant="outline" className="text-xs font-semibold">
+                    {registros.length} {registros.length === 1 ? 'instância' : 'instâncias'}
+                  </Badge>
+                </div>
+                <p className="text-sm leading-relaxed text-muted-foreground">
+                  Acompanhe status, IP, período do plano e valor de cada contratação.
+                </p>
+              </CardHeader>
+
+              <CardContent className="p-0">
+                {registrosLoading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                  </div>
+                ) : registros.length === 0 ? (
+                  <div className="px-4 py-8 text-center space-y-1">
+                    <p className="text-base font-medium text-foreground">Nenhuma VPS contratada ainda</p>
+                    <p className="text-sm text-muted-foreground">Assim que você contratar, os detalhes aparecerão aqui.</p>
+                  </div>
+                ) : (
+                  <div className="max-h-[540px] overflow-y-auto p-3 space-y-3">
+                    {registros.map((registro) => (
+                      <article
+                        key={registro.id}
+                        className="rounded-lg border border-border/70 bg-card p-4 transition-colors hover:bg-muted/30"
+                      >
+                        <div className="flex items-start justify-between gap-3">
+                          <div className="min-w-0">
+                            <p className="text-sm md:text-base font-semibold text-foreground truncate">{registro.nome_instancia}</p>
+                            <p className="text-xs text-muted-foreground">#{registro.id}</p>
+                          </div>
+                          <Badge className={`text-xs font-semibold ${getStatusBadgeClass(registro.status)}`}>
+                            {getStatusLabel(registro.status)}
+                          </Badge>
+                        </div>
+
+                        <div className="mt-4 grid grid-cols-1 xl:grid-cols-2 gap-3 text-sm">
+                          <div className="rounded-md border border-border/60 bg-muted/20 p-3">
+                            <p className="text-xs font-medium text-muted-foreground">IP da VPS</p>
+                            <p className="mt-1 font-mono text-foreground break-all">
+                              {registro.ip_vps?.trim() ? registro.ip_vps : 'Será enviado por e-mail após configuração'}
+                            </p>
+                          </div>
+
+                          <div className="rounded-md border border-border/60 bg-muted/20 p-3 space-y-2">
+                            <div className="flex items-center gap-2 text-muted-foreground">
+                              <CalendarDays className="h-4 w-4" />
+                              <span className="text-xs font-medium">Início do plano</span>
+                            </div>
+                            <p className="text-sm font-medium text-foreground">{formatDateTime(registro.plan_start_at)}</p>
+                            <div className="flex items-center gap-2 text-muted-foreground">
+                              <Clock3 className="h-4 w-4" />
+                              <span className="text-xs font-medium">Término do plano</span>
+                            </div>
+                            <p className="text-sm font-medium text-foreground">{formatDateTime(registro.plan_end_at)}</p>
+                          </div>
+                        </div>
+
+                        <div className="mt-3 rounded-md border border-border/60 bg-muted/20 p-3">
+                          <p className="text-xs font-medium text-muted-foreground">Configuração Linux</p>
+                          <p className="mt-1 text-sm text-foreground">{registro.configuracao_linux}</p>
+                        </div>
+
+                        <div className="mt-3 flex flex-col items-start gap-2">
+                          <p className="text-xs text-muted-foreground">Solicitado em {formatDateTime(registro.created_at)}</p>
                           <div className="inline-flex items-center gap-1.5 rounded-md bg-primary/10 px-2.5 py-1.5">
                             <CircleDollarSign className="h-4 w-4 text-primary" />
                             <span className="text-sm font-semibold text-primary">R$ {formatPrice(registro.valor_cobrado)}</span>
@@ -270,7 +380,7 @@ const SistemasHospedagemVps6 = () => {
           <DialogHeader>
             <DialogTitle>Confirmar contratação da VPS</DialogTitle>
             <DialogDescription>
-              Você está prestes a contratar uma VPS de 6 meses para <strong>{nomeSolicitante}</strong>. Após confirmação,
+              Você está prestes a contratar uma VPS de 12 meses para <strong>{nomeSolicitante}</strong>. Após confirmação,
               o IP e as credenciais serão enviados por e-mail quando o administrador finalizar a configuração.
             </DialogDescription>
           </DialogHeader>
