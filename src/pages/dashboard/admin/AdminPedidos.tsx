@@ -127,6 +127,8 @@ const formatTime = (dateString: string | null) => {
 
 const getStatusIndex = (status: PdfRgStatus) => status === 'cancelado' ? -1 : STATUS_ORDER.indexOf(status);
 
+type VpsWorkflowRegistro = SistemaHospedagemVps1MesRegistro | SistemaHospedagemVps6Registro | SistemaHospedagemVps1AnoRegistro;
+
 type UnifiedPedido = {
   type: 'pdf-rg' | 'pdf-personalizado' | 'dominio-com' | 'dominio-com-br' | 'vps-6';
   id: number;
@@ -146,7 +148,7 @@ type UnifiedPedido = {
   raw_personalizado?: EditarPdfPedido;
   raw_dominio?: SistemaDominioComRegistro;
   raw_dominio_br?: SistemaDominioComBrRegistro;
-  raw_vps?: SistemaHospedagemVps6Registro;
+  raw_vps?: VpsWorkflowRegistro;
 };
 
 type PedidoModuleConfig = {
