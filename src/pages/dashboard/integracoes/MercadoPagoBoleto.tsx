@@ -122,27 +122,36 @@ const MercadoPagoBoleto: React.FC = () => {
       };
 
       let finalResponse: BoletoResponse | null = null;
+      let lastError: unknown = null;
 
       for (const endpoint of ENDPOINTS) {
-        const response = await apiRequest<BoletoResponse>(endpoint, {
-          method: 'POST',
-          body: JSON.stringify(payload)
-        });
+        try {
+          const response = await apiRequest<BoletoResponse>(endpoint, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+          });
 
-        if (response?.success) {
-          finalResponse = {
-            ...response,
-            data: {
-              ...response.data,
-              expires_at: response.data?.expires_at || threeDays.toISOString()
-            }
-          };
-          break;
+          if (response?.success) {
+            finalResponse = {
+              ...response,
+              data: {
+                ...response.data,
+                expires_at: response.data?.expires_at || threeDays.toISOString()
+              }
+            };
+            break;
+          }
+
+          lastError = response?.error || response?.message || `Falha no endpoint ${endpoint}`;
+        } catch (error) {
+          lastError = error;
+          console.warn(`[BOLETO] Endpoint indisponível: ${endpoint}`, error);
         }
       }
 
       if (!finalResponse) {
-        throw new Error('Nenhum endpoint de boleto disponível no backend.');
+        const message = lastError instanceof Error ? lastError.message : String(lastError || 'Nenhum endpoint de boleto disponível no backend.');
+        throw new Error(message);
       }
 
       setResult(finalResponse);
