@@ -785,7 +785,8 @@ const AdminPedidos = () => {
 
     setSavingWorkflowIp(true);
     try {
-      const res = await sistemasHospedagemVps6Service.updateStatusByAdmin(selectedPedido.id, {
+      const vpsService = resolveVpsServiceByDuration(selectedPedido.raw_vps?.duracao_meses);
+      const res = await vpsService.updateStatusByAdmin(selectedPedido.id, {
         status: targetStatus,
         ip_vps: workflowIp.trim(),
       });
