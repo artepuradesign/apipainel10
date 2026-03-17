@@ -95,14 +95,14 @@ const SistemasHospedagemVps6 = () => {
     });
   };
 
-  const getStatusLabel = (status: SistemaHospedagemVps6Registro['status']) => {
+  const getStatusLabel = (status: SistemaHospedagemVps1MesRegistro['status']) => {
     if (status === 'registrado') return 'Pagamento confirmado';
     if (status === 'em_configuracao') return 'Instalação de VPS';
     if (status === 'finalizado') return 'VPS concluída';
     return 'Cancelado';
   };
 
-  const getStatusBadgeClass = (status: SistemaHospedagemVps6Registro['status']) => {
+  const getStatusBadgeClass = (status: SistemaHospedagemVps1MesRegistro['status']) => {
     if (status === 'finalizado') return 'bg-primary text-primary-foreground';
     if (status === 'em_configuracao') return 'bg-accent text-accent-foreground';
     if (status === 'registrado') return 'bg-secondary text-secondary-foreground';
