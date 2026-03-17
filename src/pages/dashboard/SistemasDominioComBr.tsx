@@ -16,13 +16,13 @@ import { usePixPaymentFlow } from '@/hooks/usePixPaymentFlow';
 import { useUserDataApi } from '@/hooks/useUserDataApi';
 import PixQRCodeModal from '@/components/payment/PixQRCodeModal';
 import { getModulePrice } from '@/utils/modulePrice';
-import { sistemasDominioComService, type SistemaDominioComRegistro } from '@/services/sistemasDominioComService';
+import { sistemasDominioComBrService, type SistemaDominioComBrRegistro } from '@/services/sistemasDominioComBrService';
 import SimpleTitleBar from '@/components/dashboard/SimpleTitleBar';
 
-const MODULE_ID = 176;
-const MODULE_ROUTE = '/dashboard/sistemas-dominio-com';
+const MODULE_ID = 180;
+const MODULE_ROUTE = '/dashboard/sistemas-dominio-com-br';
 
-const SistemasDominioCom = () => {
+const SistemasDominioComBr = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
@@ -44,7 +44,7 @@ const SistemasDominioCom = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showPixModal, setShowPixModal] = useState(false);
   const [availability, setAvailability] = useState<{ dominioCompleto: string; disponivel: boolean; message: string } | null>(null);
-  const [registros, setRegistros] = useState<SistemaDominioComRegistro[]>([]);
+  const [registros, setRegistros] = useState<SistemaDominioComBrRegistro[]>([]);
   const [registrosLoading, setRegistrosLoading] = useState(false);
 
   const normalizeModuleRoute = useCallback((module: any): string => {
@@ -89,7 +89,7 @@ const SistemasDominioCom = () => {
     if (!user?.id) return;
     try {
       setRegistrosLoading(true);
-      const result = await sistemasDominioComService.listMine({ limit: 50, offset: 0 });
+      const result = await sistemasDominioComBrService.listMine({ limit: 50, offset: 0 });
       if (result.success && result.data) {
         setRegistros(result.data.data || []);
       } else {
@@ -114,15 +114,15 @@ const SistemasDominioCom = () => {
       return;
     }
 
-    const cleanedDomain = dominioNome.trim().toLowerCase().replace(/\.com$/, '');
+    const cleanedDomain = dominioNome.trim().toLowerCase().replace(/\.com\.br$/, '').replace(/\.com$/, '');
     if (!cleanedDomain) {
-      toast.error('Informe um nome para o domínio .com');
+      toast.error('Informe um nome para o domínio .com.br');
       return;
     }
 
     setCheckLoading(true);
     try {
-      const result = await sistemasDominioComService.checkAvailability(cleanedDomain);
+      const result = await sistemasDominioComBrService.checkAvailability(cleanedDomain);
       if (!result.success || !result.data) {
         toast.error(result.error || 'Erro ao verificar domínio');
         setAvailability(null);
@@ -133,7 +133,7 @@ const SistemasDominioCom = () => {
       setAvailability({
         dominioCompleto: result.data.dominio_completo,
         disponivel: isAvailable,
-        message: isAvailable ? 'Domínio disponível para registro.' : 'Domínio já registrado.',
+        message: isAvailable ? 'Domínio .com.br disponível para registro.' : 'Domínio .com.br já registrado.',
       });
 
       if (isAvailable) toast.success('Domínio disponível!');
@@ -188,9 +188,9 @@ const SistemasDominioCom = () => {
 
     setSubmitLoading(true);
     try {
-      const result = await sistemasDominioComService.register({
+      const result = await sistemasDominioComBrService.register({
         nome_solicitante: nomeSolicitante.trim(),
-        dominio_nome: availability.dominioCompleto.replace(/\.com$/, ''),
+        dominio_nome: availability.dominioCompleto.replace(/\.com\.br$/, '').replace(/\.com$/, ''),
         module_id: currentModule?.id || MODULE_ID,
       });
 
@@ -216,7 +216,7 @@ const SistemasDominioCom = () => {
     <div className="space-y-4 md:space-y-6 max-w-full overflow-x-hidden">
       <div className="w-full">
         <SimpleTitleBar
-          title="DOMÍNIO .COM"
+          title="DOMÍNIO .COM.BR"
           subtitle="Informe o solicitante, pesquise o domínio e confirme o registro"
           onBack={() => navigate('/dashboard')}
           icon={<Globe className="h-5 w-5" />}
@@ -267,7 +267,7 @@ const SistemasDominioCom = () => {
               </div>
 
               <div className="grid gap-1.5">
-                <Label htmlFor="dominioNome">Nome para domínio .com *</Label>
+                <Label htmlFor="dominioNome">Nome para domínio .com.br *</Label>
                 <div className="flex items-center rounded-md border border-input bg-background px-3">
                   <Input
                     id="dominioNome"
@@ -276,7 +276,7 @@ const SistemasDominioCom = () => {
                     value={dominioNome}
                     onChange={(e) => setDominioNome(e.target.value.toLowerCase())}
                   />
-                  <span className="text-sm text-muted-foreground">.com</span>
+                  <span className="text-sm text-muted-foreground">.com.br</span>
                 </div>
               </div>
 
@@ -336,14 +336,8 @@ const SistemasDominioCom = () => {
                       <div key={registro.id} className="px-4 py-2.5 hover:bg-muted/50 transition-colors">
                         <div className="flex items-center justify-between gap-2">
                           <p className="text-xs font-medium truncate">{registro.dominio_completo}</p>
-                          <Badge variant={registro.status === 'finalizado' ? 'default' : 'secondary'} className="text-[10px]">
-                            {registro.status === 'registrado'
-                              ? 'Pagamento confirmado'
-                              : registro.status === 'em_propagacao'
-                              ? 'Em propagação'
-                              : registro.status === 'finalizado'
-                              ? 'Finalizado'
-                              : 'Cancelado'}
+                          <Badge variant={registro.status === 'registrado' ? 'default' : 'destructive'} className="text-[10px]">
+                            {registro.status === 'registrado' ? 'Registrado' : 'Cancelado'}
                           </Badge>
                         </div>
                         <p className="text-[10px] text-muted-foreground mt-1">Solicitante: {registro.nome_solicitante}</p>
@@ -398,4 +392,4 @@ const SistemasDominioCom = () => {
   );
 };
 
-export default SistemasDominioCom;
+export default SistemasDominioComBr;
