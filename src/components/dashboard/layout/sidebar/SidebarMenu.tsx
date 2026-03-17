@@ -107,15 +107,19 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
     }
   }, [isMobile, setMobileMenuOpen]);
 
-  const handleDashboardClick = useCallback((e: React.MouseEvent) => {
-    // Sempre navegar para o dashboard
-    navigate('/dashboard');
+  const adminDashboardItem = filteredItems.find((item) => item.path === '/dashboard/admin');
+  const hasAdminDashboard = !!adminDashboardItem;
+  const primaryMenuPath = hasAdminDashboard ? '/dashboard/admin' : '/dashboard';
+  const primaryMenuLabel = hasAdminDashboard ? adminDashboardItem?.label || content.sidebarOnlinePanels : content.sidebarOnlinePanels;
+  const PrimaryMenuIcon = hasAdminDashboard ? (adminDashboardItem?.icon || Home) : Home;
 
-    // Se for mobile, fechar o menu
+  const handleDashboardClick = useCallback((e: React.MouseEvent) => {
+    navigate(primaryMenuPath);
+
     if (isMobile) {
       handleMobileClick();
     }
-  }, [isMobile, handleMobileClick, navigate]);
+  }, [isMobile, handleMobileClick, navigate, primaryMenuPath]);
 
 
 
