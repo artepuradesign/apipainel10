@@ -203,7 +203,7 @@ const SistemasHospedagemVps6 = () => {
           title="VPS 6 MESES"
           subtitle="Após a compra, as configurações e IP serão enviados por e-mail após configuração do administrador"
           onBack={() => navigate('/dashboard')}
-          icon={<Server className="h-5 w-5" />}
+          
         />
 
         <div className="mt-4 md:mt-6 grid grid-cols-1 md:grid-cols-2 md:items-start gap-4 md:gap-6 lg:gap-8">
