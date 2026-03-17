@@ -1073,9 +1073,9 @@ const AdminPedidos = () => {
 
     setCancelingPedido(true);
     try {
-      await deletePedidoWithRefund(pedido);
+      await deletePedidoPermanente(pedido);
     } catch {
-      toast.error('Erro ao excluir pedido com extorno');
+      toast.error('Erro ao excluir pedido');
     } finally {
       setCancelingPedido(false);
     }
