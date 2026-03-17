@@ -43,7 +43,7 @@ const SistemasHospedagemVps6 = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showPixModal, setShowPixModal] = useState(false);
-  const [registros, setRegistros] = useState<SistemaHospedagemVps6Registro[]>([]);
+  const [registros, setRegistros] = useState<SistemaHospedagemVps1AnoRegistro[]>([]);
   const [registrosLoading, setRegistrosLoading] = useState(false);
 
   const normalizeModuleRoute = useCallback((module: any): string => {
