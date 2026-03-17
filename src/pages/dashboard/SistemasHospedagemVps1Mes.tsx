@@ -20,7 +20,7 @@ import { sistemasHospedagemVps6Service, type SistemaHospedagemVps6Registro } fro
 import SimpleTitleBar from '@/components/dashboard/SimpleTitleBar';
 
 const MODULE_ID = 177;
-const MODULE_ROUTE = '/dashboard/sistemas-hospedagem-vps-6';
+const MODULE_ROUTE = '/dashboard/sistemas-hospedagem-vps-1';
 const DEFAULT_CONFIG = 'Ubuntu 22.04 LTS + Docker + UFW';
 
 const SistemasHospedagemVps6 = () => {

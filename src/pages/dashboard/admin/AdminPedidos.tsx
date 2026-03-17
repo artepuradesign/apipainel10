@@ -289,7 +289,7 @@ const AdminPedidos = () => {
       'pdf-personalizado': ['pdf-personalizado', 'pdf personalizado'],
       'dominio-com': ['sistemas-dominio-com', 'dominio-com', 'domínio .com'],
       'dominio-com-br': ['sistemas-dominio-com-br', 'dominio-com-br', 'domínio .com.br'],
-      'vps-6': ['sistemas-hospedagem-vps-1-mes', 'sistemas-hospedagem-vps-6', 'sistemas-hospedagem-vps-1-ano', 'hospedagem-vps-1-mes', 'hospedagem-vps-6', 'hospedagem-vps-1-ano', 'vps 1 mês', 'vps 6 meses', 'vps 1 ano'],
+      'vps-6': ['sistemas-hospedagem-vps-1', 'sistemas-hospedagem-vps-6', 'sistemas-hospedagem-vps-1a', 'hospedagem-vps-1', 'hospedagem-vps-6', 'hospedagem-vps-1a', 'vps 1 mês', 'vps 6 meses', 'vps 1 ano'],
     } as const;
 
     const candidates = byType[pedidoType] || [];
