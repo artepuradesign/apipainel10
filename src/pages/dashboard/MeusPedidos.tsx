@@ -192,6 +192,12 @@ const mapModuleStatusToUnified = (pedidoType: UnifiedPedido['type'], status: Mod
   return 'pagamento_confirmado';
 };
 
+const resolveVpsServiceByDuration = (months?: number) => {
+  if ((months || 0) <= 1) return sistemasHospedagemVps1MesService;
+  if ((months || 0) >= 12) return sistemasHospedagemVps1AnoService;
+  return sistemasHospedagemVps6Service;
+};
+
 type UnifiedPedido = {
   type: 'pdf-rg' | 'pdf-personalizado' | 'dominio-com' | 'dominio-com-br' | 'vps-6';
   id: number;
