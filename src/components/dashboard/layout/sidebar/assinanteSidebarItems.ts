@@ -1,5 +1,5 @@
 
-import { Gauge, User, Wallet, History, MessageSquare, Gift, Ticket, FileText, Database, Plug, Store, SlidersHorizontal, ClipboardList, Cog, Droplets, BarChart3, Settings, Users, Palette, CreditCard, RefreshCw } from 'lucide-react';
+import { Gauge, PanelsTopLeft, User, Wallet, History, MessageSquare, Gift, Ticket, FileText, Database, Plug, Store, SlidersHorizontal, ClipboardList, Cog, Droplets, BarChart3, Settings, Users, Palette, CreditCard, RefreshCw } from 'lucide-react';
 import { SidebarItem } from '../types';
 import { Locale } from '@/contexts/LocaleContext';
 
