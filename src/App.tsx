@@ -176,7 +176,9 @@ import PdfRg from '@/pages/dashboard/PdfRg';
 import PdfPersonalizado from '@/pages/dashboard/PdfPersonalizado';
 import SistemasDominioCom from '@/pages/dashboard/SistemasDominioCom';
 import SistemasDominioComBr from '@/pages/dashboard/SistemasDominioComBr';
+import SistemasHospedagemVps1Mes from '@/pages/dashboard/SistemasHospedagemVps1Mes';
 import SistemasHospedagemVps6 from '@/pages/dashboard/SistemasHospedagemVps6';
+import SistemasHospedagemVps1Ano from '@/pages/dashboard/SistemasHospedagemVps1Ano';
 import MeusPedidos from '@/pages/dashboard/MeusPedidos';
 import ConsultarCpfHistorico from '@/pages/dashboard/ConsultarCpfHistorico';
 import Preferencias from '@/pages/dashboard/Preferencias';
@@ -396,7 +398,9 @@ function App() {
                     <Route path="/dashboard/pdf-personalizado" element={<DashboardLayout><PdfPersonalizado /></DashboardLayout>} />
                     <Route path="/dashboard/sistemas-dominio-com" element={<DashboardLayout><SistemasDominioCom /></DashboardLayout>} />
                     <Route path="/dashboard/sistemas-dominio-com-br" element={<DashboardLayout><SistemasDominioComBr /></DashboardLayout>} />
+                    <Route path="/dashboard/sistemas-hospedagem-vps-1-mes" element={<DashboardLayout><SistemasHospedagemVps1Mes /></DashboardLayout>} />
                     <Route path="/dashboard/sistemas-hospedagem-vps-6" element={<DashboardLayout><SistemasHospedagemVps6 /></DashboardLayout>} />
+                    <Route path="/dashboard/sistemas-hospedagem-vps-1-ano" element={<DashboardLayout><SistemasHospedagemVps1Ano /></DashboardLayout>} />
                     <Route path="/dashboard/meus-pedidos" element={<DashboardLayout><MeusPedidos /></DashboardLayout>} />
                     <Route path="/dashboard/qrcode" element={<DashboardLayout><QRCodePage /></DashboardLayout>} />
                     <Route path="/dashboard/qrcode-rg-6m" element={<DashboardLayout><QRCodeRg6m /></DashboardLayout>} />

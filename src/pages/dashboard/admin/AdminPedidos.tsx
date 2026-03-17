@@ -19,7 +19,9 @@ import { cookieUtils } from '@/utils/cookieUtils';
 import { moduleService, type Module as ApiModule } from '@/utils/apiService';
 import { sistemasDominioComService, type SistemaDominioComRegistro } from '@/services/sistemasDominioComService';
 import { sistemasDominioComBrService, type SistemaDominioComBrRegistro } from '@/services/sistemasDominioComBrService';
+import { sistemasHospedagemVps1MesService, type SistemaHospedagemVps1MesRegistro } from '@/services/sistemasHospedagemVps1MesService';
 import { sistemasHospedagemVps6Service, type SistemaHospedagemVps6Registro } from '@/services/sistemasHospedagemVps6Service';
+import { sistemasHospedagemVps1AnoService, type SistemaHospedagemVps1AnoRegistro } from '@/services/sistemasHospedagemVps1AnoService';
 
 type ActivePedidoStatus = Exclude<PdfRgStatus, 'cancelado'>;
 
@@ -111,6 +113,12 @@ const getModuleFilterStatus = (pedidoType: UnifiedPedido['type'], unifiedStatusF
   return undefined;
 };
 
+const resolveVpsServiceByDuration = (months?: number) => {
+  if ((months || 0) <= 1) return sistemasHospedagemVps1MesService;
+  if ((months || 0) >= 12) return sistemasHospedagemVps1AnoService;
+  return sistemasHospedagemVps6Service;
+};
+
 const formatDateBR = (dateStr: string | null) => {
   if (!dateStr) return '—';
   const parts = dateStr.split('-');
@@ -124,6 +132,8 @@ const formatTime = (dateString: string | null) => {
 };
 
 const getStatusIndex = (status: PdfRgStatus) => status === 'cancelado' ? -1 : STATUS_ORDER.indexOf(status);
+
+type VpsWorkflowRegistro = SistemaHospedagemVps1MesRegistro | SistemaHospedagemVps6Registro | SistemaHospedagemVps1AnoRegistro;
 
 type UnifiedPedido = {
   type: 'pdf-rg' | 'pdf-personalizado' | 'dominio-com' | 'dominio-com-br' | 'vps-6';
@@ -144,7 +154,7 @@ type UnifiedPedido = {
   raw_personalizado?: EditarPdfPedido;
   raw_dominio?: SistemaDominioComRegistro;
   raw_dominio_br?: SistemaDominioComBrRegistro;
-  raw_vps?: SistemaHospedagemVps6Registro;
+  raw_vps?: VpsWorkflowRegistro;
 };
 
 type PedidoModuleConfig = {
@@ -279,7 +289,7 @@ const AdminPedidos = () => {
       'pdf-personalizado': ['pdf-personalizado', 'pdf personalizado'],
       'dominio-com': ['sistemas-dominio-com', 'dominio-com', 'domínio .com'],
       'dominio-com-br': ['sistemas-dominio-com-br', 'dominio-com-br', 'domínio .com.br'],
-      'vps-6': ['sistemas-hospedagem-vps-6', 'hospedagem-vps-6', 'vps 6 meses'],
+      'vps-6': ['sistemas-hospedagem-vps-1-mes', 'sistemas-hospedagem-vps-6', 'sistemas-hospedagem-vps-1-ano', 'hospedagem-vps-1-mes', 'hospedagem-vps-6', 'hospedagem-vps-1-ano', 'vps 1 mês', 'vps 6 meses', 'vps 1 ano'],
     } as const;
 
     const candidates = byType[pedidoType] || [];
@@ -484,38 +494,56 @@ const AdminPedidos = () => {
 
       if (typeFilter === 'all' || typeFilter === 'vps-6') {
         const vpsStatusFilter = getModuleFilterStatus('vps-6', statusFilter);
-        const res5 = await sistemasHospedagemVps6Service.listAdmin({
+        const vpsParams = {
           limit: 50,
           offset: 0,
           ...(search ? { search } : {}),
           ...(vpsStatusFilter
             ? { status: vpsStatusFilter as 'registrado' | 'em_configuracao' | 'finalizado' | 'cancelado' }
             : {}),
-        });
+        };
 
-        if (res5.success && res5.data) {
-          res5.data.data.forEach((vps: SistemaHospedagemVps6Registro) => {
-            const mappedStatus = mapModuleStatusToUnified('vps-6', vps.status as ModuleWorkflowStatus);
-            const statusTimestamp = vps.updated_at || vps.created_at;
+        const [resVps1Mes, resVps6, resVps1Ano] = await Promise.all([
+          sistemasHospedagemVps1MesService.listAdmin(vpsParams),
+          sistemasHospedagemVps6Service.listAdmin(vpsParams),
+          sistemasHospedagemVps1AnoService.listAdmin(vpsParams),
+        ]);
 
-            results.push({
-              type: 'vps-6',
-              id: vps.id,
-              status: mappedStatus,
-              label: vps.nome_instancia,
-              sublabel: `IP: ${vps.ip_vps?.trim() ? vps.ip_vps : 'pendente'}`,
-              created_at: vps.created_at,
-              preco_pago: Number(vps.valor_cobrado || 0),
-              realizado_at: vps.created_at,
-              pagamento_confirmado_at: vps.status === 'cancelado' ? null : vps.created_at,
-              em_confeccao_at: mappedStatus === 'em_confeccao' || mappedStatus === 'entregue' ? statusTimestamp : null,
-              entregue_at: mappedStatus === 'entregue' ? statusTimestamp : null,
-              plan_start_at: vps.plan_start_at,
-              plan_end_at: vps.plan_end_at,
-              raw_vps: vps,
-            });
+        const appendVpsResult = (vps: VpsWorkflowRegistro) => {
+          const mappedStatus = mapModuleStatusToUnified('vps-6', vps.status as ModuleWorkflowStatus);
+          const statusTimestamp = vps.updated_at || vps.created_at;
+
+          results.push({
+            type: 'vps-6',
+            id: vps.id,
+            status: mappedStatus,
+            label: vps.nome_instancia,
+            sublabel: `IP: ${vps.ip_vps?.trim() ? vps.ip_vps : 'pendente'}`,
+            created_at: vps.created_at,
+            preco_pago: Number(vps.valor_cobrado || 0),
+            realizado_at: vps.created_at,
+            pagamento_confirmado_at: vps.status === 'cancelado' ? null : vps.created_at,
+            em_confeccao_at: mappedStatus === 'em_confeccao' || mappedStatus === 'entregue' ? statusTimestamp : null,
+            entregue_at: mappedStatus === 'entregue' ? statusTimestamp : null,
+            plan_start_at: vps.plan_start_at,
+            plan_end_at: vps.plan_end_at,
+            raw_vps: vps,
           });
-          totalCount += res5.data.pagination.total;
+        };
+
+        if (resVps1Mes.success && resVps1Mes.data) {
+          resVps1Mes.data.data.forEach(appendVpsResult);
+          totalCount += resVps1Mes.data.pagination.total;
+        }
+
+        if (resVps6.success && resVps6.data) {
+          resVps6.data.data.forEach(appendVpsResult);
+          totalCount += resVps6.data.pagination.total;
+        }
+
+        if (resVps1Ano.success && resVps1Ano.data) {
+          resVps1Ano.data.data.forEach(appendVpsResult);
+          totalCount += resVps1Ano.data.pagination.total;
         }
       }
 
@@ -655,7 +683,8 @@ const AdminPedidos = () => {
           return;
         }
 
-        res = await sistemasHospedagemVps6Service.updateStatusByAdmin(selectedPedido.id, {
+        const vpsService = resolveVpsServiceByDuration(selectedPedido.raw_vps?.duracao_meses);
+        res = await vpsService.updateStatusByAdmin(selectedPedido.id, {
           status: targetStatus,
           ...(workflowIp.trim() ? { ip_vps: workflowIp.trim() } : {}),
         });
@@ -756,7 +785,8 @@ const AdminPedidos = () => {
 
     setSavingWorkflowIp(true);
     try {
-      const res = await sistemasHospedagemVps6Service.updateStatusByAdmin(selectedPedido.id, {
+      const vpsService = resolveVpsServiceByDuration(selectedPedido.raw_vps?.duracao_meses);
+      const res = await vpsService.updateStatusByAdmin(selectedPedido.id, {
         status: targetStatus,
         ip_vps: workflowIp.trim(),
       });
@@ -937,7 +967,8 @@ const AdminPedidos = () => {
     } else if (pedido.type === 'dominio-com-br') {
       res = await sistemasDominioComBrService.deleteByAdmin(pedido.id);
     } else {
-      res = await sistemasHospedagemVps6Service.deleteByAdmin(pedido.id);
+      const vpsService = resolveVpsServiceByDuration(pedido.raw_vps?.duracao_meses);
+      res = await vpsService.deleteByAdmin(pedido.id);
     }
 
     if (!res?.success) {
