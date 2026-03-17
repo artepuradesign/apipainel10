@@ -404,12 +404,14 @@ const MeusPedidos = () => {
     if (!user?.id) return;
     if (!silent) setLoading(true);
     try {
-      const [resRg, resPersonalizado, resDominioCom, resDominioComBr, resVps6] = await Promise.all([
+      const [resRg, resPersonalizado, resDominioCom, resDominioComBr, resVps1Mes, resVps6, resVps1Ano] = await Promise.all([
         pdfRgService.listar({ limit: 50, user_id: Number(user.id) }),
         editarPdfService.listar({ limit: 50, user_id: Number(user.id) }),
         sistemasDominioComService.listMine({ limit: 50, offset: 0 }),
         sistemasDominioComBrService.listMine({ limit: 50, offset: 0 }),
+        sistemasHospedagemVps1MesService.listMine({ limit: 50, offset: 0 }),
         sistemasHospedagemVps6Service.listMine({ limit: 50, offset: 0 }),
+        sistemasHospedagemVps1AnoService.listMine({ limit: 50, offset: 0 }),
       ]);
 
       const allPedidos: UnifiedPedido[] = [];
