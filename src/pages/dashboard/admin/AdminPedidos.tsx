@@ -967,7 +967,8 @@ const AdminPedidos = () => {
     } else if (pedido.type === 'dominio-com-br') {
       res = await sistemasDominioComBrService.deleteByAdmin(pedido.id);
     } else {
-      res = await sistemasHospedagemVps6Service.deleteByAdmin(pedido.id);
+      const vpsService = resolveVpsServiceByDuration(pedido.raw_vps?.duracao_meses);
+      res = await vpsService.deleteByAdmin(pedido.id);
     }
 
     if (!res?.success) {
