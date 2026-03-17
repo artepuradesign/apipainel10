@@ -494,38 +494,56 @@ const AdminPedidos = () => {
 
       if (typeFilter === 'all' || typeFilter === 'vps-6') {
         const vpsStatusFilter = getModuleFilterStatus('vps-6', statusFilter);
-        const res5 = await sistemasHospedagemVps6Service.listAdmin({
+        const vpsParams = {
           limit: 50,
           offset: 0,
           ...(search ? { search } : {}),
           ...(vpsStatusFilter
             ? { status: vpsStatusFilter as 'registrado' | 'em_configuracao' | 'finalizado' | 'cancelado' }
             : {}),
-        });
+        };
 
-        if (res5.success && res5.data) {
-          res5.data.data.forEach((vps: SistemaHospedagemVps6Registro) => {
-            const mappedStatus = mapModuleStatusToUnified('vps-6', vps.status as ModuleWorkflowStatus);
-            const statusTimestamp = vps.updated_at || vps.created_at;
+        const [resVps1Mes, resVps6, resVps1Ano] = await Promise.all([
+          sistemasHospedagemVps1MesService.listAdmin(vpsParams),
+          sistemasHospedagemVps6Service.listAdmin(vpsParams),
+          sistemasHospedagemVps1AnoService.listAdmin(vpsParams),
+        ]);
 
-            results.push({
-              type: 'vps-6',
-              id: vps.id,
-              status: mappedStatus,
-              label: vps.nome_instancia,
-              sublabel: `IP: ${vps.ip_vps?.trim() ? vps.ip_vps : 'pendente'}`,
-              created_at: vps.created_at,
-              preco_pago: Number(vps.valor_cobrado || 0),
-              realizado_at: vps.created_at,
-              pagamento_confirmado_at: vps.status === 'cancelado' ? null : vps.created_at,
-              em_confeccao_at: mappedStatus === 'em_confeccao' || mappedStatus === 'entregue' ? statusTimestamp : null,
-              entregue_at: mappedStatus === 'entregue' ? statusTimestamp : null,
-              plan_start_at: vps.plan_start_at,
-              plan_end_at: vps.plan_end_at,
-              raw_vps: vps,
-            });
+        const appendVpsResult = (vps: VpsWorkflowRegistro) => {
+          const mappedStatus = mapModuleStatusToUnified('vps-6', vps.status as ModuleWorkflowStatus);
+          const statusTimestamp = vps.updated_at || vps.created_at;
+
+          results.push({
+            type: 'vps-6',
+            id: vps.id,
+            status: mappedStatus,
+            label: vps.nome_instancia,
+            sublabel: `IP: ${vps.ip_vps?.trim() ? vps.ip_vps : 'pendente'}`,
+            created_at: vps.created_at,
+            preco_pago: Number(vps.valor_cobrado || 0),
+            realizado_at: vps.created_at,
+            pagamento_confirmado_at: vps.status === 'cancelado' ? null : vps.created_at,
+            em_confeccao_at: mappedStatus === 'em_confeccao' || mappedStatus === 'entregue' ? statusTimestamp : null,
+            entregue_at: mappedStatus === 'entregue' ? statusTimestamp : null,
+            plan_start_at: vps.plan_start_at,
+            plan_end_at: vps.plan_end_at,
+            raw_vps: vps,
           });
-          totalCount += res5.data.pagination.total;
+        };
+
+        if (resVps1Mes.success && resVps1Mes.data) {
+          resVps1Mes.data.data.forEach(appendVpsResult);
+          totalCount += resVps1Mes.data.pagination.total;
+        }
+
+        if (resVps6.success && resVps6.data) {
+          resVps6.data.data.forEach(appendVpsResult);
+          totalCount += resVps6.data.pagination.total;
+        }
+
+        if (resVps1Ano.success && resVps1Ano.data) {
+          resVps1Ano.data.data.forEach(appendVpsResult);
+          totalCount += resVps1Ano.data.pagination.total;
         }
       }
 
