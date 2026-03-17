@@ -118,6 +118,11 @@ class SistemasHospedagemVps6 extends BaseModel {
         return $stmt->execute([$id]);
     }
 
+    public function deleteById(int $id): bool {
+        $stmt = $this->db->prepare("DELETE FROM {$this->table} WHERE id = ?");
+        return $stmt->execute([$id]);
+    }
+
     public function updateAdminWorkflow(int $id, string $status, ?string $ipVps = null): array {
         $allowedStatuses = ['registrado', 'em_configuracao', 'finalizado'];
         if (!in_array($status, $allowedStatuses, true)) {
