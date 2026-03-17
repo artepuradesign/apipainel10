@@ -369,6 +369,8 @@ function App() {
                     
                     {/* Integrações */}
                     <Route path="/dashboard/integracoes/mercado-pago" element={<DashboardLayout><MercadoPago /></DashboardLayout>} />
+                    <Route path="/dashboard/integracoes/mercado-pago-cartao" element={<DashboardLayout><MercadoPagoCartao /></DashboardLayout>} />
+                    <Route path="/dashboard/integracoes/mercado-pago-boleto" element={<DashboardLayout><MercadoPagoBoleto /></DashboardLayout>} />
                     
                     {/* Pagamentos */}
                     <Route path="/dashboard/pagamentos/historico-pix" element={<DashboardLayout><HistoricoPix /></DashboardLayout>} />
