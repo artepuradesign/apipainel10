@@ -953,7 +953,33 @@ const MeusPedidos = () => {
                   </>
                 )}
                 <span className="text-muted-foreground">{t.value}:</span><span>R$ {Number(selectedPedido.preco_pago || 0).toFixed(2)}</span>
-                <span className="text-muted-foreground">{t.date}:</span><span>{formatFullDate(selectedPedido.created_at)}</span>
+                <span className="text-muted-foreground">Tempo restante:</span>
+                {(() => {
+                  const countdown = getRemainingCountdown(getPedidoDeadline(selectedPedido), countdownNow);
+
+                  if (!countdown) {
+                    return <span className="text-muted-foreground">Não aplicável</span>;
+                  }
+
+                  return (
+                    <span className="flex items-center flex-wrap gap-2">
+                      <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-2 py-1">
+                        <Timer className="h-3.5 w-3.5 text-primary" />
+                        <span className="font-semibold tabular-nums">{String(countdown.days).padStart(2, '0')}</span>
+                        <span className="text-xs text-muted-foreground">dias</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-2 py-1">
+                        <span className="font-semibold tabular-nums">{String(countdown.minutes).padStart(2, '0')}</span>
+                        <span className="text-xs text-muted-foreground">min</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-2 py-1">
+                        <span className="font-semibold tabular-nums">{String(countdown.seconds).padStart(2, '0')}</span>
+                        <span className="text-xs text-muted-foreground">seg</span>
+                      </span>
+                      {countdown.ended && <span className="text-xs text-destructive">expirado</span>}
+                    </span>
+                  );
+                })()}
               </div>
 
               {(selectedPedido.anexo1_nome || selectedPedido.anexo2_nome || selectedPedido.anexo3_nome) && (
