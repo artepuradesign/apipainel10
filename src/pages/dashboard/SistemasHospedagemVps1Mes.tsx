@@ -172,7 +172,7 @@ const SistemasHospedagemVps6 = () => {
   const handleRegister = async () => {
     setSubmitLoading(true);
     try {
-      const result = await sistemasHospedagemVps6Service.register({
+      const result = await sistemasHospedagemVps1MesService.register({
         nome_solicitante: nomeSolicitante.trim(),
         nome_instancia: nomeInstancia.trim() || `vps-${user?.id || 'cliente'}`,
         module_id: currentModule?.id || MODULE_ID,
