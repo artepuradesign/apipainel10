@@ -26,6 +26,7 @@ import PixQRCodeModal from '@/components/payment/PixQRCodeModal';
 import FloatingPendingPix from '@/components/payment/FloatingPendingPix';
 import QRCode from 'react-qr-code';
 import { API_BASE_URL } from '@/config/apiConfig';
+import { formatMoneyBR } from '@/utils/formatters';
 
 interface PanelsGridProps {
   activePanels: Panel[];

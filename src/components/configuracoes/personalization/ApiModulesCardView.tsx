@@ -11,6 +11,7 @@ import ModuleGridWrapper from './ModuleGridWrapper';
 import { useUserSubscription } from '@/hooks/useUserSubscription';
 import { useAuth } from '@/contexts/AuthContext';
 import { getDiscount } from '@/utils/planUtils';
+import { formatMoneyBR } from '@/utils/formatters';
 
 interface ApiModulesCardViewProps {
   modules: Module[];
