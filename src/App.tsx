@@ -137,6 +137,8 @@ import Ajuda from '@/pages/dashboard/Ajuda';
 import Suporte from '@/pages/dashboard/Suporte';
 import GerenciarChamados from '@/pages/dashboard/GerenciarChamados';
 import MercadoPago from '@/pages/dashboard/integracoes/MercadoPago';
+import MercadoPagoCartao from '@/pages/dashboard/integracoes/MercadoPagoCartao';
+import MercadoPagoBoleto from '@/pages/dashboard/integracoes/MercadoPagoBoleto';
 import HistoricoPix from '@/pages/dashboard/pagamentos/HistoricoPix';
 import MeuHistoricoPix from '@/pages/dashboard/MeuHistoricoPix';
 import NovoModuloStatus from '@/pages/ModuleStatus/NovoModulo';
