@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { AlertCircle, CalendarDays, CheckCircle2, CircleDollarSign, Clock3, Loader2, Server, ShieldCheck } from 'lucide-react';
+import * as LucideIcons from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { useApiModules } from '@/hooks/useApiModules';
@@ -15,12 +16,10 @@ import { useWalletBalance } from '@/hooks/useWalletBalance';
 import { usePixPaymentFlow } from '@/hooks/usePixPaymentFlow';
 import { useUserDataApi } from '@/hooks/useUserDataApi';
 import PixQRCodeModal from '@/components/payment/PixQRCodeModal';
-import { getModulePrice } from '@/utils/modulePrice';
 import { sistemasHospedagemVps1AnoService, type SistemaHospedagemVps1AnoRegistro } from '@/services/sistemasHospedagemVps1AnoService';
 import SimpleTitleBar from '@/components/dashboard/SimpleTitleBar';
 
-const MODULE_ID = 177;
-const MODULE_ROUTE = '/dashboard/sistemas-hospedagem-vps-1a';
+const MODULE_ID = 179;
 const DEFAULT_CONFIG = 'Ubuntu 22.04 LTS + Docker + UFW';
 
 const SistemasHospedagemVps6 = () => {
@@ -56,16 +55,22 @@ const SistemasHospedagemVps6 = () => {
   }, []);
 
   const currentModule = useMemo(() => {
+    const allModules = modules || [];
+    const moduleById = allModules.find((m: any) => Number(m?.id) === MODULE_ID);
+    if (moduleById) return moduleById;
+
     const pathname = (location?.pathname || '').trim();
     if (!pathname) return null;
-    return (modules || []).find((m: any) => normalizeModuleRoute(m) === pathname) || null;
+    return allModules.find((m: any) => normalizeModuleRoute(m) === pathname) || null;
   }, [modules, location?.pathname, normalizeModuleRoute]);
 
-  const modulePrice = useMemo(() => {
-    const configuredPrice = Number(currentModule?.price ?? 0);
-    if (configuredPrice > 0) return configuredPrice;
-    return getModulePrice(MODULE_ROUTE);
-  }, [currentModule?.price]);
+  const modulePrice = useMemo(() => Number(currentModule?.price ?? 0), [currentModule?.price]);
+
+  const ModuleIcon = useMemo(() => {
+    const iconName = String(currentModule?.icon || 'Server');
+    const IconComponent = (LucideIcons as any)[iconName];
+    return IconComponent || Server;
+  }, [currentModule?.icon]);
 
   const userPlan = hasActiveSubscription && subscription
     ? subscription.plan_name
@@ -203,7 +208,7 @@ const SistemasHospedagemVps6 = () => {
           title="VPS 1 ANO"
           subtitle="Após a compra, as configurações e IP serão enviados por e-mail após configuração do administrador"
           onBack={() => navigate('/dashboard')}
-          icon={<Server className="h-5 w-5" />}
+          icon={<ModuleIcon className="h-5 w-5" />}
         />
 
         <div className="mt-4 md:mt-6 grid grid-cols-1 md:grid-cols-2 md:items-start gap-4 md:gap-6 lg:gap-8">
