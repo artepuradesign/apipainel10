@@ -120,6 +120,31 @@ class SistemasHospedagemVps6Controller {
         }
     }
 
+    public function deletarAdmin(int $id) {
+        try {
+            $userId = AuthMiddleware::getCurrentUserId();
+            if (!$userId) {
+                Response::error('Usuário não autenticado', 401);
+                return;
+            }
+
+            if (!$this->isAdminOrSupport((int)$userId)) {
+                Response::error('Acesso negado', 403);
+                return;
+            }
+
+            if ($id <= 0) {
+                Response::error('ID inválido', 400);
+                return;
+            }
+
+            $this->model->deleteById($id);
+            Response::success(['id' => $id], 'Pedido excluído permanentemente com sucesso');
+        } catch (Exception $e) {
+            Response::error('Erro ao excluir pedido: ' . $e->getMessage(), 500);
+        }
+    }
+
     public function atualizarStatusAdmin(int $id) {
         try {
             $userId = AuthMiddleware::getCurrentUserId();

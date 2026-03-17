@@ -194,7 +194,7 @@ const StatusProgressCircles = ({
       <div className="w-full py-4">
         <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-foreground flex items-center gap-2">
           <Ban className="h-4 w-4 text-destructive" />
-          Pedido cancelado e mantido para auditoria.
+          Pedido cancelado.
         </div>
       </div>
     );
@@ -979,8 +979,8 @@ const AdminPedidos = () => {
     }
   };
 
-  const deletePedidoWithRefund = async (pedido: UnifiedPedido) => {
-    if (!confirm('Tem certeza que deseja excluir este pedido e realizar o extorno para o saldo do usuário?')) return false;
+  const deletePedidoPermanente = async (pedido: UnifiedPedido) => {
+    if (!confirm('Tem certeza que deseja excluir este pedido permanentemente?')) return false;
 
     let res;
     if (pedido.type === 'pdf-rg') {
@@ -997,11 +997,11 @@ const AdminPedidos = () => {
     }
 
     if (!res?.success) {
-      toast.error(res?.error || 'Erro ao excluir pedido com extorno');
+      toast.error(res?.error || 'Erro ao excluir pedido');
       return false;
     }
 
-    toast.success('Pedido excluído com sucesso e valor estornado ao saldo do usuário');
+    toast.success('Pedido excluído permanentemente com sucesso');
     if (selectedPedido?.id === pedido.id && selectedPedido?.type === pedido.type) {
       setSelectedPedido(null);
     }
@@ -1011,9 +1011,9 @@ const AdminPedidos = () => {
 
   const handleDelete = async (pedido: UnifiedPedido) => {
     try {
-      await deletePedidoWithRefund(pedido);
+      await deletePedidoPermanente(pedido);
     } catch {
-      toast.error('Erro ao excluir pedido com extorno');
+      toast.error('Erro ao excluir pedido');
     }
   };
 
@@ -1073,9 +1073,9 @@ const AdminPedidos = () => {
 
     setCancelingPedido(true);
     try {
-      await deletePedidoWithRefund(pedido);
+      await deletePedidoPermanente(pedido);
     } catch {
-      toast.error('Erro ao excluir pedido com extorno');
+      toast.error('Erro ao excluir pedido');
     } finally {
       setCancelingPedido(false);
     }
@@ -1467,7 +1467,7 @@ const AdminPedidos = () => {
                             className="gap-1"
                           >
                             {cancelingPedido ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Ban className="h-3.5 w-3.5" />}
-                            {cancelingPedido ? 'Cancelando...' : 'Cancelar pedido'}
+                            {cancelingPedido ? 'Excluindo...' : 'Excluir pedido'}
                           </Button>
                         )}
                       </div>

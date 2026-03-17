@@ -54,6 +54,14 @@ switch ($method) {
         }
         break;
 
+    case 'DELETE':
+        if (preg_match('#/sistemas-dominio-com/(\d+)/?$#', $path, $matches)) {
+            $controller->deletarAdmin((int)$matches[1]);
+        } else {
+            Response::notFound('Endpoint não encontrado');
+        }
+        break;
+
     default:
         Response::methodNotAllowed('Método não permitido');
         break;
