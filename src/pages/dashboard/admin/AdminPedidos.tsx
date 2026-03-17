@@ -131,6 +131,13 @@ const formatTime = (dateString: string | null) => {
   return new Date(dateString).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
 };
 
+const formatDateTime = (dateString?: string | null) => {
+  if (!dateString) return '—';
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return '—';
+  return date.toLocaleString('pt-BR');
+};
+
 const getStatusIndex = (status: PdfRgStatus) => status === 'cancelado' ? -1 : STATUS_ORDER.indexOf(status);
 
 type VpsWorkflowRegistro = SistemaHospedagemVps1MesRegistro | SistemaHospedagemVps6Registro | SistemaHospedagemVps1AnoRegistro;
@@ -592,9 +599,27 @@ const AdminPedidos = () => {
           toast.error('Erro ao carregar detalhes');
         }
         setQrCadastroSelecionado(null);
+      } else if (pedido.type === 'vps-6') {
+        const vpsService = resolveVpsServiceByDuration(pedido.raw_vps?.duracao_meses);
+        const res = await vpsService.getById(pedido.id);
+
+        if (res.success && res.data) {
+          setSelectedPedido({
+            ...pedido,
+            raw_vps: res.data,
+            plan_start_at: res.data.plan_start_at,
+            plan_end_at: res.data.plan_end_at,
+          });
+          setWorkflowIp(res.data.ip_vps || '');
+        } else {
+          setSelectedPedido(pedido);
+          setWorkflowIp(pedido.raw_vps?.ip_vps || '');
+        }
+
+        setQrCadastroSelecionado(null);
       } else {
         setSelectedPedido(pedido);
-        setWorkflowIp(pedido.type === 'vps-6' ? (pedido.raw_vps?.ip_vps || '') : '');
+        setWorkflowIp('');
         setQrCadastroSelecionado(null);
       }
     } catch (e) {
@@ -1134,8 +1159,8 @@ const AdminPedidos = () => {
           <div><span className="text-muted-foreground">IP:</span> {p.ip_vps || '—'}</div>
           <div><span className="text-muted-foreground">Linux:</span> {p.configuracao_linux}</div>
           <div><span className="text-muted-foreground">Duração:</span> {p.duracao_meses} meses</div>
-          <div><span className="text-muted-foreground">Início do plano:</span> {p.plan_start_at ? new Date(p.plan_start_at).toLocaleString('pt-BR') : '—'}</div>
-          <div><span className="text-muted-foreground">Término do plano:</span> {p.plan_end_at ? new Date(p.plan_end_at).toLocaleString('pt-BR') : '—'}</div>
+          <div><span className="text-muted-foreground">Início do plano:</span> {formatDateTime(p.plan_start_at)}</div>
+          <div><span className="text-muted-foreground">Término do plano:</span> {formatDateTime(p.plan_end_at)}</div>
           <div><span className="text-muted-foreground">Valor:</span> R$ {Number(p.valor_cobrado || 0).toFixed(2)}</div>
           <div><span className="text-muted-foreground">Desconto:</span> R$ {Number(p.desconto_aplicado || 0).toFixed(2)}</div>
           <div><span className="text-muted-foreground">Status:</span> {p.status}</div>

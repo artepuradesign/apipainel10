@@ -16,7 +16,7 @@ import { usePixPaymentFlow } from '@/hooks/usePixPaymentFlow';
 import { useUserDataApi } from '@/hooks/useUserDataApi';
 import PixQRCodeModal from '@/components/payment/PixQRCodeModal';
 import { getModulePrice } from '@/utils/modulePrice';
-import { sistemasHospedagemVps6Service, type SistemaHospedagemVps6Registro } from '@/services/sistemasHospedagemVps6Service';
+import { sistemasHospedagemVps1AnoService, type SistemaHospedagemVps1AnoRegistro } from '@/services/sistemasHospedagemVps1AnoService';
 import SimpleTitleBar from '@/components/dashboard/SimpleTitleBar';
 
 const MODULE_ID = 177;
@@ -43,7 +43,7 @@ const SistemasHospedagemVps6 = () => {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [showPixModal, setShowPixModal] = useState(false);
-  const [registros, setRegistros] = useState<SistemaHospedagemVps6Registro[]>([]);
+  const [registros, setRegistros] = useState<SistemaHospedagemVps1AnoRegistro[]>([]);
   const [registrosLoading, setRegistrosLoading] = useState(false);
 
   const normalizeModuleRoute = useCallback((module: any): string => {
@@ -95,14 +95,14 @@ const SistemasHospedagemVps6 = () => {
     });
   };
 
-  const getStatusLabel = (status: SistemaHospedagemVps6Registro['status']) => {
+  const getStatusLabel = (status: SistemaHospedagemVps1AnoRegistro['status']) => {
     if (status === 'registrado') return 'Pagamento confirmado';
     if (status === 'em_configuracao') return 'Instalação de VPS';
     if (status === 'finalizado') return 'VPS concluída';
     return 'Cancelado';
   };
 
-  const getStatusBadgeClass = (status: SistemaHospedagemVps6Registro['status']) => {
+  const getStatusBadgeClass = (status: SistemaHospedagemVps1AnoRegistro['status']) => {
     if (status === 'finalizado') return 'bg-primary text-primary-foreground';
     if (status === 'em_configuracao') return 'bg-accent text-accent-foreground';
     if (status === 'registrado') return 'bg-secondary text-secondary-foreground';
@@ -113,7 +113,7 @@ const SistemasHospedagemVps6 = () => {
     if (!user?.id) return;
     try {
       setRegistrosLoading(true);
-      const result = await sistemasHospedagemVps6Service.listMine({ limit: 50, offset: 0 });
+      const result = await sistemasHospedagemVps1AnoService.listMine({ limit: 50, offset: 0 });
       if (result.success && result.data) {
         setRegistros(result.data.data || []);
       } else {
@@ -172,7 +172,7 @@ const SistemasHospedagemVps6 = () => {
   const handleRegister = async () => {
     setSubmitLoading(true);
     try {
-      const result = await sistemasHospedagemVps6Service.register({
+      const result = await sistemasHospedagemVps1AnoService.register({
         nome_solicitante: nomeSolicitante.trim(),
         nome_instancia: nomeInstancia.trim() || `vps-${user?.id || 'cliente'}`,
         module_id: currentModule?.id || MODULE_ID,
@@ -200,7 +200,7 @@ const SistemasHospedagemVps6 = () => {
     <div className="space-y-4 md:space-y-6 max-w-full overflow-x-hidden">
       <div className="w-full">
         <SimpleTitleBar
-          title="VPS 6 MESES"
+          title="VPS 1 ANO"
           subtitle="Após a compra, as configurações e IP serão enviados por e-mail após configuração do administrador"
           onBack={() => navigate('/dashboard')}
           icon={<Server className="h-5 w-5" />}
@@ -266,7 +266,7 @@ const SistemasHospedagemVps6 = () => {
                   Configuração Linux padrão inclusa
                 </div>
                 <p className="text-muted-foreground">{DEFAULT_CONFIG}</p>
-                <p className="text-muted-foreground">Duração: 6 meses</p>
+                <p className="text-muted-foreground">Duração: 12 meses</p>
               </div>
 
               <Button type="button" onClick={openConfirmModal} disabled={!canRegister} className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
