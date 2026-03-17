@@ -101,6 +101,8 @@ const SistemasHospedagemVps6 = () => {
     });
   };
 
+  const formatPrice = (value: number | string) => formatMoneyBR(Number(value) || 0);
+
   const getStatusLabel = (status: SistemaHospedagemVps1AnoRegistro['status']) => {
     if (status === 'registrado') return 'Pagamento confirmado';
     if (status === 'em_configuracao') return 'Instalação de VPS';
