@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChevronRight, LayoutDashboard } from 'lucide-react';
+import { ChevronRight, Gauge } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { SidebarItem } from '../types';
