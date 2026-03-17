@@ -100,20 +100,9 @@ export const sistemasHospedagemVps1MesService = {
     });
   },
 
-  async deleteByAdmin(id: number): Promise<ApiResponse<{ id: number; refunded_amount?: number; status?: 'cancelado' }>> {
-    const deleteResponse = await apiRequest<{ id: number; refunded_amount?: number }>(`/sistemas-hospedagem-vps-1-mes/${id}`, {
+  async deleteByAdmin(id: number) {
+    return apiRequest<{ id: number; refunded_amount?: number }>(`/sistemas-hospedagem-vps-1-mes/${id}`, {
       method: 'DELETE',
-    });
-
-    if (deleteResponse.success) return deleteResponse;
-
-    const errorMessage = `${deleteResponse.error || deleteResponse.message || ''}`.toLowerCase();
-    const methodNotAllowed = errorMessage.includes('método não permitido') || errorMessage.includes('method not allowed') || errorMessage.includes('405');
-
-    if (!methodNotAllowed) return deleteResponse;
-
-    return apiRequest<{ id: number; status: 'cancelado' }>(`/sistemas-hospedagem-vps-1-mes/${id}/cancel`, {
-      method: 'POST',
     });
   },
 

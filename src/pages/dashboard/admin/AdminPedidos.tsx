@@ -983,8 +983,6 @@ const AdminPedidos = () => {
     if (!confirm('Tem certeza que deseja excluir este pedido e realizar o extorno para o saldo do usuário?')) return false;
 
     let res;
-    let usedCancelFallback = false;
-
     if (pedido.type === 'pdf-rg') {
       res = await pdfRgService.deletar(pedido.id);
     } else if (pedido.type === 'pdf-personalizado') {
@@ -996,7 +994,6 @@ const AdminPedidos = () => {
     } else {
       const vpsService = resolveVpsServiceByDuration(pedido.raw_vps?.duracao_meses);
       res = await vpsService.deleteByAdmin(pedido.id);
-      usedCancelFallback = Boolean(res?.success && (res.data as { status?: string } | undefined)?.status === 'cancelado' && !(res.data as { refunded_amount?: number } | undefined)?.refunded_amount);
     }
 
     if (!res?.success) {
@@ -1004,12 +1001,7 @@ const AdminPedidos = () => {
       return false;
     }
 
-    toast.success(
-      usedCancelFallback
-        ? 'API não permite exclusão deste tipo de pedido: ele foi cancelado com sucesso.'
-        : 'Pedido excluído com sucesso e valor estornado ao saldo do usuário'
-    );
-
+    toast.success('Pedido excluído com sucesso e valor estornado ao saldo do usuário');
     if (selectedPedido?.id === pedido.id && selectedPedido?.type === pedido.type) {
       setSelectedPedido(null);
     }
