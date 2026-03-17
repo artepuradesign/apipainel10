@@ -113,6 +113,12 @@ const getModuleFilterStatus = (pedidoType: UnifiedPedido['type'], unifiedStatusF
   return undefined;
 };
 
+const resolveVpsServiceByDuration = (months?: number) => {
+  if ((months || 0) <= 1) return sistemasHospedagemVps1MesService;
+  if ((months || 0) >= 12) return sistemasHospedagemVps1AnoService;
+  return sistemasHospedagemVps6Service;
+};
+
 const formatDateBR = (dateStr: string | null) => {
   if (!dateStr) return '—';
   const parts = dateStr.split('-');
