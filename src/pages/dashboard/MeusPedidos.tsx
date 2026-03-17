@@ -12,7 +12,7 @@ import { sistemasDominioComBrService, type SistemaDominioComBrRegistro } from '@
 import { sistemasHospedagemVps1MesService, type SistemaHospedagemVps1MesRegistro } from '@/services/sistemasHospedagemVps1MesService';
 import { sistemasHospedagemVps6Service, type SistemaHospedagemVps6Registro } from '@/services/sistemasHospedagemVps6Service';
 import { sistemasHospedagemVps1AnoService, type SistemaHospedagemVps1AnoRegistro } from '@/services/sistemasHospedagemVps1AnoService';
-import { Eye, Download, Loader2, Package, DollarSign, Hammer, CheckCircle, ClipboardList, FileDown, FileText, Ban, Globe, Server } from 'lucide-react';
+import { Eye, Download, Loader2, Package, DollarSign, Hammer, CheckCircle, ClipboardList, FileDown, FileText, Ban, Globe, Server, Timer } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import DashboardTitleCard from '@/components/dashboard/DashboardTitleCard';
 import { useNavigate } from 'react-router-dom';
@@ -326,6 +326,38 @@ const MeusPedidos = () => {
   const [selectedPedido, setSelectedPedido] = useState<UnifiedPedido | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [cancelingPedidoKey, setCancelingPedidoKey] = useState<string | null>(null);
+  const [countdownNow, setCountdownNow] = useState(Date.now());
+
+  useEffect(() => {
+    if (!showModal || !selectedPedido) return;
+    const interval = window.setInterval(() => setCountdownNow(Date.now()), 1000);
+    return () => window.clearInterval(interval);
+  }, [showModal, selectedPedido]);
+
+  const getPedidoDeadline = (pedido: UnifiedPedido): string | null => {
+    if (pedido.type === 'vps-6') return getVpsPlanEndAt(pedido);
+    if (pedido.type === 'dominio-com' || pedido.type === 'dominio-com-br') return getDomainPlanEndAt(pedido);
+    return null;
+  };
+
+  const getRemainingCountdown = (deadlineAt: string | null, nowMs: number) => {
+    if (!deadlineAt) return null;
+
+    const deadlineTs = new Date(deadlineAt).getTime();
+    if (Number.isNaN(deadlineTs)) return null;
+
+    const totalSeconds = Math.max(0, Math.floor((deadlineTs - nowMs) / 1000));
+    const days = Math.floor(totalSeconds / 86400);
+    const minutes = Math.floor((totalSeconds % 86400) / 60);
+    const seconds = totalSeconds % 60;
+
+    return {
+      days,
+      minutes,
+      seconds,
+      ended: totalSeconds === 0,
+    };
+  };
 
   const getStepTimestamp = (pedido: UnifiedPedido, step: ActivePedidoStatus): string | null => {
     const map: Record<ActivePedidoStatus, string | null> = {
@@ -921,7 +953,33 @@ const MeusPedidos = () => {
                   </>
                 )}
                 <span className="text-muted-foreground">{t.value}:</span><span>R$ {Number(selectedPedido.preco_pago || 0).toFixed(2)}</span>
-                <span className="text-muted-foreground">{t.date}:</span><span>{formatFullDate(selectedPedido.created_at)}</span>
+                <span className="text-muted-foreground">Tempo restante:</span>
+                {(() => {
+                  const countdown = getRemainingCountdown(getPedidoDeadline(selectedPedido), countdownNow);
+
+                  if (!countdown) {
+                    return <span className="text-muted-foreground">Não aplicável</span>;
+                  }
+
+                  return (
+                    <span className="flex items-center flex-wrap gap-2">
+                      <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-2 py-1">
+                        <Timer className="h-3.5 w-3.5 text-primary" />
+                        <span className="font-semibold tabular-nums">{String(countdown.days).padStart(2, '0')}</span>
+                        <span className="text-xs text-muted-foreground">dias</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-2 py-1">
+                        <span className="font-semibold tabular-nums">{String(countdown.minutes).padStart(2, '0')}</span>
+                        <span className="text-xs text-muted-foreground">min</span>
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-2 py-1">
+                        <span className="font-semibold tabular-nums">{String(countdown.seconds).padStart(2, '0')}</span>
+                        <span className="text-xs text-muted-foreground">seg</span>
+                      </span>
+                      {countdown.ended && <span className="text-xs text-destructive">expirado</span>}
+                    </span>
+                  );
+                })()}
               </div>
 
               {(selectedPedido.anexo1_nome || selectedPedido.anexo2_nome || selectedPedido.anexo3_nome) && (
