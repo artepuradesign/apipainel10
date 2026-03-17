@@ -266,7 +266,7 @@ const SistemasHospedagemVps6 = () => {
                   Configuração Linux padrão inclusa
                 </div>
                 <p className="text-muted-foreground">{DEFAULT_CONFIG}</p>
-                <p className="text-muted-foreground">Duração: 6 meses</p>
+                <p className="text-muted-foreground">Duração: 1 mês</p>
               </div>
 
               <Button type="button" onClick={openConfirmModal} disabled={!canRegister} className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
