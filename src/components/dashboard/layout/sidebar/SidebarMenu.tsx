@@ -107,15 +107,19 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
     }
   }, [isMobile, setMobileMenuOpen]);
 
-  const handleDashboardClick = useCallback((e: React.MouseEvent) => {
-    // Sempre navegar para o dashboard
-    navigate('/dashboard');
+  const adminDashboardItem = filteredItems.find((item) => item.path === '/dashboard/admin');
+  const hasAdminDashboard = !!adminDashboardItem;
+  const primaryMenuPath = hasAdminDashboard ? '/dashboard/admin' : '/dashboard';
+  const primaryMenuLabel = hasAdminDashboard ? adminDashboardItem?.label || content.sidebarOnlinePanels : content.sidebarOnlinePanels;
+  const PrimaryMenuIcon = hasAdminDashboard ? (adminDashboardItem?.icon || Home) : Home;
 
-    // Se for mobile, fechar o menu
+  const handleDashboardClick = useCallback((e: React.MouseEvent) => {
+    navigate(primaryMenuPath);
+
     if (isMobile) {
       handleMobileClick();
     }
-  }, [isMobile, handleMobileClick, navigate]);
+  }, [isMobile, handleMobileClick, navigate, primaryMenuPath]);
 
 
 
@@ -170,8 +174,13 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
     );
   }, [clickedItem, submenuPosition, collapsed, location.pathname, handleSubItemClick, handleMobileClick]);
 
-  // Remover "Painéis Online" dos filteredItems já que será renderizado separadamente
-  const menuItems = filteredItems.filter((item) => item.path !== '/dashboard');
+  // Renderiza no topo o item principal (Dashboard admin para suporte, Painéis Online para demais)
+  const menuItems = filteredItems.filter((item) => {
+    if (hasAdminDashboard) {
+      return item.path !== '/dashboard/admin';
+    }
+    return item.path !== '/dashboard';
+  });
 
   return (
     <TooltipProvider delayDuration={300}>
@@ -179,7 +188,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
         {/* Header modernizado com gradiente */}
         <div className="px-3 pt-3 pb-2 bg-gradient-to-br from-brand-purple/5 via-purple-50/50 to-blue-50/30 dark:from-purple-900/10 dark:via-gray-800 dark:to-gray-900 border-b border-gray-200 dark:border-gray-700">
           <div className={`flex items-center w-full transition-all duration-200 rounded-lg group relative overflow-hidden ${
-            location.pathname === '/dashboard'
+            location.pathname === primaryMenuPath
               ? 'bg-gradient-to-r from-brand-purple to-purple-600 text-white shadow-md'
               : 'text-gray-700 dark:text-gray-300 hover:bg-white/80 dark:hover:bg-gray-800/80'
           }`}>
@@ -189,18 +198,18 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
                   className="flex items-center flex-1 p-3"
                   onClick={handleDashboardClick}
                 >
-                  {location.pathname === '/dashboard' && (
+                  {location.pathname === primaryMenuPath && (
                     <div className="absolute inset-0 bg-gradient-to-r from-brand-purple/20 to-purple-600/20 animate-pulse-gentle" />
                   )}
-                  <Home className={`${collapsed ? 'mx-auto' : 'mr-3'} shrink-0`} size={20} />
+                  <PrimaryMenuIcon className={`${collapsed ? 'mx-auto' : 'mr-3'} shrink-0`} size={20} />
                   {!collapsed && (
-                    <span className="text-sm font-semibold relative z-10">{content.sidebarOnlinePanels}</span>
+                    <span className="text-sm font-semibold relative z-10">{primaryMenuLabel}</span>
                   )}
                 </button>
               </TooltipTrigger>
               {collapsed && (
                 <TooltipContent side="right">
-                  <p>{content.sidebarOnlinePanels}</p>
+                  <p>{primaryMenuLabel}</p>
                 </TooltipContent>
               )}
             </Tooltip>
