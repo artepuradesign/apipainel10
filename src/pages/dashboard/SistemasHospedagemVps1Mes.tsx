@@ -113,7 +113,7 @@ const SistemasHospedagemVps6 = () => {
     if (!user?.id) return;
     try {
       setRegistrosLoading(true);
-      const result = await sistemasHospedagemVps6Service.listMine({ limit: 50, offset: 0 });
+      const result = await sistemasHospedagemVps1MesService.listMine({ limit: 50, offset: 0 });
       if (result.success && result.data) {
         setRegistros(result.data.data || []);
       } else {
