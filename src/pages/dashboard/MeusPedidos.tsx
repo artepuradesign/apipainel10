@@ -729,10 +729,13 @@ const MeusPedidos = () => {
       ? 'Domínio .COM.BR'
       : getVpsLabel(pedido)
   );
-  const canCancelPedido = (status: UnifiedStatus) => ['realizado', 'pagamento_confirmado'].includes(status);
+  const canCancelPedido = (pedido: UnifiedPedido) => (
+    ['realizado', 'pagamento_confirmado'].includes(pedido.status)
+    && (pedido.type === 'pdf-rg' || pedido.type === 'pdf-personalizado')
+  );
 
   const handleCancelPedido = async (pedido: UnifiedPedido) => {
-    if (!canCancelPedido(pedido.status) || pedido.type === 'dominio-com') return;
+    if (!canCancelPedido(pedido)) return;
     const pedidoKey = `${pedido.type}-${pedido.id}`;
     if (!confirm(t.confirmCancel)) return;
 
