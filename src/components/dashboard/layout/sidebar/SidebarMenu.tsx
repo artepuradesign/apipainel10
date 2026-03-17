@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ChevronRight, Gauge } from 'lucide-react';
+import { ChevronRight, PanelsTopLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { SidebarItem } from '../types';
@@ -111,7 +111,8 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
   const hasAdminDashboard = !!adminDashboardItem;
   const primaryMenuPath = hasAdminDashboard ? '/dashboard/admin' : '/dashboard';
   const primaryMenuLabel = hasAdminDashboard ? adminDashboardItem?.label || content.sidebarOnlinePanels : content.sidebarOnlinePanels;
-  const PrimaryMenuIcon = hasAdminDashboard ? (adminDashboardItem?.icon || Gauge) : Gauge;
+  const onlinePanelsItem = filteredItems.find((item) => item.path === '/dashboard');
+  const PrimaryMenuIcon = hasAdminDashboard ? (adminDashboardItem?.icon || PanelsTopLeft) : (onlinePanelsItem?.icon || PanelsTopLeft);
 
   const handleDashboardClick = useCallback((e: React.MouseEvent) => {
     navigate(primaryMenuPath);
