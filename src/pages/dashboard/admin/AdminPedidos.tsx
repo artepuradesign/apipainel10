@@ -599,9 +599,27 @@ const AdminPedidos = () => {
           toast.error('Erro ao carregar detalhes');
         }
         setQrCadastroSelecionado(null);
+      } else if (pedido.type === 'vps-6') {
+        const vpsService = resolveVpsServiceByDuration(pedido.raw_vps?.duracao_meses);
+        const res = await vpsService.getById(pedido.id);
+
+        if (res.success && res.data) {
+          setSelectedPedido({
+            ...pedido,
+            raw_vps: res.data,
+            plan_start_at: res.data.plan_start_at,
+            plan_end_at: res.data.plan_end_at,
+          });
+          setWorkflowIp(res.data.ip_vps || '');
+        } else {
+          setSelectedPedido(pedido);
+          setWorkflowIp(pedido.raw_vps?.ip_vps || '');
+        }
+
+        setQrCadastroSelecionado(null);
       } else {
         setSelectedPedido(pedido);
-        setWorkflowIp(pedido.type === 'vps-6' ? (pedido.raw_vps?.ip_vps || '') : '');
+        setWorkflowIp('');
         setQrCadastroSelecionado(null);
       }
     } catch (e) {
