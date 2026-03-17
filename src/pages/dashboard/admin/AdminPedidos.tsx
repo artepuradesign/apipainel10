@@ -194,7 +194,7 @@ const StatusProgressCircles = ({
       <div className="w-full py-4">
         <div className="rounded-md border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-foreground flex items-center gap-2">
           <Ban className="h-4 w-4 text-destructive" />
-          Pedido cancelado e mantido para auditoria.
+          Pedido cancelado.
         </div>
       </div>
     );
