@@ -509,28 +509,38 @@ const MeusPedidos = () => {
         });
       }
 
-      if (resVps6.success && resVps6.data?.data) {
-        resVps6.data.data.forEach((p: SistemaHospedagemVps6Registro) => {
-          const mappedStatus = mapModuleStatusToUnified('vps-6', p.status as ModuleWorkflowStatus);
-          const statusTimestamp = p.updated_at || p.created_at;
-          allPedidos.push({
-            type: 'vps-6',
-            id: p.id,
-            status: mappedStatus,
-            preco_pago: p.valor_cobrado,
-            created_at: p.created_at,
-            realizado_at: p.created_at,
-            pagamento_confirmado_at: p.status === 'cancelado' ? null : p.created_at,
-            em_confeccao_at: mappedStatus === 'em_confeccao' || mappedStatus === 'entregue' ? statusTimestamp : null,
-            entregue_at: mappedStatus === 'entregue' ? statusTimestamp : null,
-            nome_solicitante: p.nome_solicitante,
-            nome_instancia: p.nome_instancia,
-            ip_vps: p.ip_vps,
-            duracao_meses: p.duracao_meses,
-            plan_start_at: p.plan_start_at,
-            plan_end_at: p.plan_end_at,
-          });
+      const appendVpsPedidos = (p: SistemaHospedagemVps1MesRegistro | SistemaHospedagemVps6Registro | SistemaHospedagemVps1AnoRegistro) => {
+        const mappedStatus = mapModuleStatusToUnified('vps-6', p.status as ModuleWorkflowStatus);
+        const statusTimestamp = p.updated_at || p.created_at;
+        allPedidos.push({
+          type: 'vps-6',
+          id: p.id,
+          status: mappedStatus,
+          preco_pago: p.valor_cobrado,
+          created_at: p.created_at,
+          realizado_at: p.created_at,
+          pagamento_confirmado_at: p.status === 'cancelado' ? null : p.created_at,
+          em_confeccao_at: mappedStatus === 'em_confeccao' || mappedStatus === 'entregue' ? statusTimestamp : null,
+          entregue_at: mappedStatus === 'entregue' ? statusTimestamp : null,
+          nome_solicitante: p.nome_solicitante,
+          nome_instancia: p.nome_instancia,
+          ip_vps: p.ip_vps,
+          duracao_meses: p.duracao_meses,
+          plan_start_at: p.plan_start_at,
+          plan_end_at: p.plan_end_at,
         });
+      };
+
+      if (resVps1Mes.success && resVps1Mes.data?.data) {
+        resVps1Mes.data.data.forEach(appendVpsPedidos);
+      }
+
+      if (resVps6.success && resVps6.data?.data) {
+        resVps6.data.data.forEach(appendVpsPedidos);
+      }
+
+      if (resVps1Ano.success && resVps1Ano.data?.data) {
+        resVps1Ano.data.data.forEach(appendVpsPedidos);
       }
 
       allPedidos.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
