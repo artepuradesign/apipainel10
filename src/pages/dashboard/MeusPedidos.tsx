@@ -861,16 +861,16 @@ const MeusPedidos = () => {
                 <>
                         {p.nome_instancia && <p>Instância: <span className="text-foreground">{p.nome_instancia}</span></p>}
                         {p.ip_vps && <p>IP: <span className="text-foreground font-mono">{p.ip_vps}</span></p>}
-                        <p>Início: 17/03/2026, 19:59<span className="text-foreground">{formatFullDate(getVpsPlanStartAt(p)) || '—'}</span></p>
-                        
+                        <p>Início do plano: <span className="text-foreground">{formatFullDate(getVpsPlanStartAt(p)) || '—'}</span></p>
+                        <p>Término do plano: <span className="text-foreground">{formatFullDate(getVpsPlanEndAt(p)) || '—'}</span></p>
                         <p>{t.value}: <span className="text-foreground font-medium">R$ {Number(p.preco_pago || 0).toFixed(2)}</span></p>
                       </> :
 
                 <>
                         {p.nome_solicitante && <p>{t.requester}: <span className="text-foreground">{p.nome_solicitante}</span></p>}
                         {p.dominio_completo && <p>{t.domain}: <span className="text-foreground font-mono">{p.dominio_completo}</span></p>}
-                        
-                        <p>Término: 17/03/2027, 18:13<span className="text-foreground">{formatFullDate(getDomainPlanEndAt(p)) || '—'}</span></p>
+                        <p>Início do domínio: <span className="text-foreground">{formatFullDate(getDomainPlanStartAt(p)) || '—'}</span></p>
+                        <p>Término do domínio: <span className="text-foreground">{formatFullDate(getDomainPlanEndAt(p)) || '—'}</span></p>
                         <p>{t.value}: <span className="text-foreground font-medium">R$ {Number(p.preco_pago || 0).toFixed(2)}</span></p>
                       </>
                 }
