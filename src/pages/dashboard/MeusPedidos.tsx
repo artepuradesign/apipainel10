@@ -848,7 +848,7 @@ const MeusPedidos = () => {
                     <Button size="sm" variant="outline" onClick={() => handleView(p)}>
                       <Eye className="h-4 w-4 mr-1" /> {t.details}
                     </Button>
-                    {p.type !== 'dominio-com' && canCancelPedido(p.status) && (
+                    {canCancelPedido(p) && (
                       <Button
                         size="sm"
                         variant="destructive"
