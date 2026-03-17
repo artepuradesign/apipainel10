@@ -12,7 +12,7 @@ import { sistemasDominioComBrService, type SistemaDominioComBrRegistro } from '@
 import { sistemasHospedagemVps1MesService, type SistemaHospedagemVps1MesRegistro } from '@/services/sistemasHospedagemVps1MesService';
 import { sistemasHospedagemVps6Service, type SistemaHospedagemVps6Registro } from '@/services/sistemasHospedagemVps6Service';
 import { sistemasHospedagemVps1AnoService, type SistemaHospedagemVps1AnoRegistro } from '@/services/sistemasHospedagemVps1AnoService';
-import { Eye, Download, Loader2, Package, DollarSign, Hammer, CheckCircle, ClipboardList, FileDown, FileText, Ban, Globe, Server } from 'lucide-react';
+import { Eye, Download, Loader2, Package, DollarSign, Hammer, CheckCircle, ClipboardList, FileDown, FileText, Ban, Globe, Server, Timer } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import DashboardTitleCard from '@/components/dashboard/DashboardTitleCard';
 import { useNavigate } from 'react-router-dom';
