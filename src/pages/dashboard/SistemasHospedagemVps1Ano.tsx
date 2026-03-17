@@ -18,6 +18,7 @@ import { useUserDataApi } from '@/hooks/useUserDataApi';
 import PixQRCodeModal from '@/components/payment/PixQRCodeModal';
 import { sistemasHospedagemVps1AnoService, type SistemaHospedagemVps1AnoRegistro } from '@/services/sistemasHospedagemVps1AnoService';
 import SimpleTitleBar from '@/components/dashboard/SimpleTitleBar';
+import { formatMoneyBR } from '@/utils/formatters';
 
 const MODULE_ID = 179;
 const DEFAULT_CONFIG = 'Ubuntu 22.04 LTS + Docker + UFW';
@@ -99,6 +100,8 @@ const SistemasHospedagemVps6 = () => {
       minute: '2-digit',
     });
   };
+
+  const formatPrice = (value: number | string) => formatMoneyBR(Number(value) || 0);
 
   const getStatusLabel = (status: SistemaHospedagemVps1AnoRegistro['status']) => {
     if (status === 'registrado') return 'Pagamento confirmado';
@@ -233,10 +236,10 @@ const SistemasHospedagemVps6 = () => {
                     </div>
                     <div className="flex flex-col items-end gap-0.5 flex-shrink-0">
                       {hasDiscount && (
-                        <span className="text-xs text-muted-foreground line-through">R$ {modulePrice.toFixed(2)}</span>
+                        <span className="text-xs text-muted-foreground line-through">R$ {formatPrice(modulePrice)}</span>
                       )}
                       <span className="text-xl md:text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-400 dark:to-indigo-400 bg-clip-text text-transparent whitespace-nowrap">
-                        R$ {finalPrice.toFixed(2)}
+                        R$ {formatPrice(finalPrice)}
                       </span>
                     </div>
                   </div>
@@ -281,7 +284,7 @@ const SistemasHospedagemVps6 = () => {
               {!hasSufficientBalance && (
                 <div className="flex items-center gap-2 text-destructive text-sm leading-relaxed">
                   <AlertCircle className="h-4 w-4" />
-                  <span>Saldo insuficiente. Gere o PIX para pagar R$ {finalPrice.toFixed(2).replace('.', ',')}</span>
+                  <span>Saldo insuficiente. Gere o PIX para pagar R$ {formatPrice(finalPrice)}</span>
                 </div>
               )}
             </CardContent>
@@ -359,7 +362,7 @@ const SistemasHospedagemVps6 = () => {
                           <p className="text-xs text-muted-foreground">Solicitado em {formatDateTime(registro.created_at)}</p>
                           <div className="inline-flex items-center gap-1.5 rounded-md bg-primary/10 px-2.5 py-1.5">
                             <CircleDollarSign className="h-4 w-4 text-primary" />
-                            <span className="text-sm font-semibold text-primary">R$ {Number(registro.valor_cobrado).toFixed(2).replace('.', ',')}</span>
+                            <span className="text-sm font-semibold text-primary">R$ {formatPrice(registro.valor_cobrado)}</span>
                           </div>
                         </div>
                       </article>
@@ -377,7 +380,7 @@ const SistemasHospedagemVps6 = () => {
           <DialogHeader>
             <DialogTitle>Confirmar contratação da VPS</DialogTitle>
             <DialogDescription>
-              Você está prestes a contratar uma VPS de 6 meses para <strong>{nomeSolicitante}</strong>. Após confirmação,
+              Você está prestes a contratar uma VPS de 12 meses para <strong>{nomeSolicitante}</strong>. Após confirmação,
               o IP e as credenciais serão enviados por e-mail quando o administrador finalizar a configuração.
             </DialogDescription>
           </DialogHeader>
@@ -385,7 +388,7 @@ const SistemasHospedagemVps6 = () => {
           <div className="rounded-md border border-border p-3 text-sm space-y-1">
             <p>Instância: <strong>{nomeInstancia.trim() || `vps-${user?.id || 'cliente'}`}</strong></p>
             <p>Configuração: <strong>{DEFAULT_CONFIG}</strong></p>
-            <p>Valor a cobrar: <strong>R$ {finalPrice.toFixed(2).replace('.', ',')}</strong></p>
+            <p>Valor a cobrar: <strong>R$ {formatPrice(finalPrice)}</strong></p>
           </div>
 
           <DialogFooter>

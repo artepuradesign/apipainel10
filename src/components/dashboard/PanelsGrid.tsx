@@ -26,6 +26,7 @@ import PixQRCodeModal from '@/components/payment/PixQRCodeModal';
 import FloatingPendingPix from '@/components/payment/FloatingPendingPix';
 import QRCode from 'react-qr-code';
 import { API_BASE_URL } from '@/config/apiConfig';
+import { formatMoneyBR } from '@/utils/formatters';
 
 interface PanelsGridProps {
   activePanels: Panel[];
@@ -135,27 +136,13 @@ const PanelsGrid: React.FC<PanelsGridProps> = ({ activePanels }) => {
   };
 
   const formatPrice = (price: number | string) => {
-    if (!price && price !== 0) return '0,00';
-    
-    if (typeof price === 'string') {
-      const cleanPrice = price.replace(/[^\d,\.]/g, '');
-      if (!cleanPrice) return '0,00';
-      
-      if (cleanPrice.includes(',')) {
-        const parts = cleanPrice.split(',');
-        if (parts.length === 2 && parts[1].length <= 2) {
-          return cleanPrice;
-        }
-      }
-      
-      const numericValue = parseFloat(cleanPrice.replace(',', '.'));
-      if (isNaN(numericValue)) return '0,00';
-      
-      return numericValue.toFixed(2).replace('.', ',');
-    }
-    
-    const numericValue = typeof price === 'number' ? price : 0;
-    return numericValue.toFixed(2).replace('.', ',');
+    if (price === null || price === undefined || price === '') return '0,00';
+
+    const numericValue = typeof price === 'string'
+      ? Number(price.replace(/\./g, '').replace(',', '.').replace(/[^\d.-]/g, ''))
+      : Number(price);
+
+    return formatMoneyBR(Number.isFinite(numericValue) ? numericValue : 0);
   };
 
   const getModulePageRoute = (module: any): string => {

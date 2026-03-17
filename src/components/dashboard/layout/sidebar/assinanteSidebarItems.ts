@@ -1,5 +1,5 @@
 
-import { LayoutDashboard, User, Wallet, History, MessageSquare, Gift, Ticket, FileText, Database, Plug, Store, SlidersHorizontal, ClipboardList, Cog, Droplets, BarChart3, Settings, Users, Palette, CreditCard, RefreshCw } from 'lucide-react';
+import { Gauge, User, Wallet, History, MessageSquare, Gift, Ticket, FileText, Database, Plug, Store, SlidersHorizontal, ClipboardList, Cog, Droplets, BarChart3, Settings, Users, Palette, CreditCard, RefreshCw } from 'lucide-react';
 import { SidebarItem } from '../types';
 import { Locale } from '@/contexts/LocaleContext';
 
@@ -168,12 +168,12 @@ export const createAssinanteSidebarItems = (handleLogout: () => void, panelMenus
 
   return [
     ...(isSupport ? [{
-      icon: LayoutDashboard,
+      icon: Gauge,
       label: t.dashboard,
       path: '/dashboard/admin'
     }] : []),
     {
-      icon: LayoutDashboard,
+      icon: Gauge,
       label: t.onlinePanels,
       path: '/dashboard'
     },

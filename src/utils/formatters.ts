@@ -58,3 +58,11 @@ export const formatDateOnly = (dateString: string): string => {
   // Para outros formatos, usa o comportamento padrão
   return new Date(dateString).toLocaleDateString('pt-BR');
 };
+
+export const formatMoneyBR = (value: number): string => {
+  const numericValue = Number(value) || 0;
+  return numericValue.toLocaleString('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+};
