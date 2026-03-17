@@ -137,6 +137,8 @@ import Ajuda from '@/pages/dashboard/Ajuda';
 import Suporte from '@/pages/dashboard/Suporte';
 import GerenciarChamados from '@/pages/dashboard/GerenciarChamados';
 import MercadoPago from '@/pages/dashboard/integracoes/MercadoPago';
+import MercadoPagoCartao from '@/pages/dashboard/integracoes/MercadoPagoCartao';
+import MercadoPagoBoleto from '@/pages/dashboard/integracoes/MercadoPagoBoleto';
 import HistoricoPix from '@/pages/dashboard/pagamentos/HistoricoPix';
 import MeuHistoricoPix from '@/pages/dashboard/MeuHistoricoPix';
 import NovoModuloStatus from '@/pages/ModuleStatus/NovoModulo';
@@ -367,6 +369,8 @@ function App() {
                     
                     {/* Integrações */}
                     <Route path="/dashboard/integracoes/mercado-pago" element={<DashboardLayout><MercadoPago /></DashboardLayout>} />
+                    <Route path="/dashboard/integracoes/mercado-pago-cartao" element={<DashboardLayout><MercadoPagoCartao /></DashboardLayout>} />
+                    <Route path="/dashboard/integracoes/mercado-pago-boleto" element={<DashboardLayout><MercadoPagoBoleto /></DashboardLayout>} />
                     
                     {/* Pagamentos */}
                     <Route path="/dashboard/pagamentos/historico-pix" element={<DashboardLayout><HistoricoPix /></DashboardLayout>} />
