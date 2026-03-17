@@ -92,33 +92,13 @@ const ApiModulesCardView: React.FC<ApiModulesCardViewProps> = ({
 
   // Função para formatar o preço (SEM R$)
   const formatPrice = (price: number | string) => {
-    if (!price && price !== 0) return '0,00';
+    if (price === null || price === undefined || price === '') return '0,00';
 
-    // Se for string, limpa completamente e reconstrói
-    if (typeof price === 'string') {
-      // Remove tudo exceto números, vírgulas e pontos
-      const cleanPrice = price.replace(/[^\d,\.]/g, '');
+    const numericValue = typeof price === 'string'
+      ? Number(price.replace(/\./g, '').replace(',', '.').replace(/[^\d.-]/g, ''))
+      : Number(price);
 
-      if (!cleanPrice) return '0,00';
-
-      // Se tem vírgula, assume que já está formatado em BR
-      if (cleanPrice.includes(',')) {
-        const parts = cleanPrice.split(',');
-        if (parts.length === 2 && parts[1].length <= 2) {
-          return cleanPrice;
-        }
-      }
-
-      // Converte para número
-      const numericValue = parseFloat(cleanPrice.replace(',', '.'));
-      if (isNaN(numericValue)) return '0,00';
-
-      return numericValue.toFixed(2).replace('.', ',');
-    }
-
-    // Para números
-    const numericValue = typeof price === 'number' ? price : 0;
-    return numericValue.toFixed(2).replace('.', ',');
+    return formatMoneyBR(Number.isFinite(numericValue) ? numericValue : 0);
   };
 
   return (

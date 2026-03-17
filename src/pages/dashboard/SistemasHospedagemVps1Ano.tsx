@@ -18,6 +18,7 @@ import { useUserDataApi } from '@/hooks/useUserDataApi';
 import PixQRCodeModal from '@/components/payment/PixQRCodeModal';
 import { sistemasHospedagemVps1AnoService, type SistemaHospedagemVps1AnoRegistro } from '@/services/sistemasHospedagemVps1AnoService';
 import SimpleTitleBar from '@/components/dashboard/SimpleTitleBar';
+import { formatMoneyBR } from '@/utils/formatters';
 
 const MODULE_ID = 179;
 const DEFAULT_CONFIG = 'Ubuntu 22.04 LTS + Docker + UFW';
