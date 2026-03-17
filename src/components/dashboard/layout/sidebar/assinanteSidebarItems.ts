@@ -168,12 +168,12 @@ export const createAssinanteSidebarItems = (handleLogout: () => void, panelMenus
 
   return [
     ...(isSupport ? [{
-      icon: LayoutDashboard,
+      icon: Gauge,
       label: t.dashboard,
       path: '/dashboard/admin'
     }] : []),
     {
-      icon: LayoutDashboard,
+      icon: Gauge,
       label: t.onlinePanels,
       path: '/dashboard'
     },
