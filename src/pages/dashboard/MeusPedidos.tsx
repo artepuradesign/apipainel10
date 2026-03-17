@@ -861,16 +861,16 @@ const MeusPedidos = () => {
                 <>
                         {p.nome_instancia && <p>Instância: <span className="text-foreground">{p.nome_instancia}</span></p>}
                         {p.ip_vps && <p>IP: <span className="text-foreground font-mono">{p.ip_vps}</span></p>}
-                        <p>Início do plano: <span className="text-foreground">{formatFullDate(getVpsPlanStartAt(p)) || '—'}</span></p>
-                        <p>Término do plano: <span className="text-foreground">{formatFullDate(getVpsPlanEndAt(p)) || '—'}</span></p>
+                        <p>Início: <span className="text-foreground">{formatFullDate(getVpsPlanStartAt(p)) || '—'}</span></p>
+                        <p>Término: <span className="text-foreground">{formatFullDate(getVpsPlanEndAt(p)) || '—'}</span></p>
                         <p>{t.value}: <span className="text-foreground font-medium">R$ {Number(p.preco_pago || 0).toFixed(2)}</span></p>
                       </> :
 
                 <>
                         {p.nome_solicitante && <p>{t.requester}: <span className="text-foreground">{p.nome_solicitante}</span></p>}
                         {p.dominio_completo && <p>{t.domain}: <span className="text-foreground font-mono">{p.dominio_completo}</span></p>}
-                        <p>Início do domínio: <span className="text-foreground">{formatFullDate(getDomainPlanStartAt(p)) || '—'}</span></p>
-                        <p>Término do domínio: <span className="text-foreground">{formatFullDate(getDomainPlanEndAt(p)) || '—'}</span></p>
+                        <p>Início: <span className="text-foreground">{formatFullDate(getDomainPlanStartAt(p)) || '—'}</span></p>
+                        <p>Término: <span className="text-foreground">{formatFullDate(getDomainPlanEndAt(p)) || '—'}</span></p>
                         <p>{t.value}: <span className="text-foreground font-medium">R$ {Number(p.preco_pago || 0).toFixed(2)}</span></p>
                       </>
                 }
@@ -915,7 +915,7 @@ const MeusPedidos = () => {
           <div className="space-y-4 text-sm">
               <StatusTracker pedido={selectedPedido} />
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-[112px_minmax(0,1fr)] items-start gap-x-2 gap-y-2">
                 {selectedPedido.type === 'pdf-rg' ?
               <>
                     {selectedPedido.cpf && <><span className="text-muted-foreground">CPF:</span><span className="font-mono">{selectedPedido.cpf}</span></>}
@@ -941,15 +941,15 @@ const MeusPedidos = () => {
               <>
                     {selectedPedido.nome_instancia && <><span className="text-muted-foreground">Instância:</span><span>{selectedPedido.nome_instancia}</span></>}
                     {selectedPedido.ip_vps && <><span className="text-muted-foreground">IP:</span><span className="font-mono">{selectedPedido.ip_vps}</span></>}
-                    <><span className="text-muted-foreground">Início do plano:</span><span>{formatFullDate(getVpsPlanStartAt(selectedPedido)) || '—'}</span></>
-                    <><span className="text-muted-foreground">Término do plano:</span><span>{formatFullDate(getVpsPlanEndAt(selectedPedido)) || '—'}</span></>
+                    <><span className="text-muted-foreground">Início:</span><span>{formatFullDate(getVpsPlanStartAt(selectedPedido)) || '—'}</span></>
+                    <><span className="text-muted-foreground">Término:</span><span>{formatFullDate(getVpsPlanEndAt(selectedPedido)) || '—'}</span></>
                   </> :
 
               <>
                     {selectedPedido.nome_solicitante && <><span className="text-muted-foreground">{t.requester}:</span><span>{selectedPedido.nome_solicitante}</span></>}
                     {selectedPedido.dominio_completo && <><span className="text-muted-foreground">{t.domain}:</span><span className="font-mono">{selectedPedido.dominio_completo}</span></>}
                     <><span className="text-muted-foreground">Início:</span><span>{formatFullDate(getDomainPlanStartAt(selectedPedido)) || '—'}</span></>
-                    <><span className="text-muted-foreground">Término do domínio:</span><span>{formatFullDate(getDomainPlanEndAt(selectedPedido)) || '—'}</span></>
+                    <><span className="text-muted-foreground">Término:</span><span>{formatFullDate(getDomainPlanEndAt(selectedPedido)) || '—'}</span></>
                   </>
               }
                 <span className="text-muted-foreground">{t.value}:</span><span>R$ {Number(selectedPedido.preco_pago || 0).toFixed(2)}</span>
@@ -962,7 +962,7 @@ const MeusPedidos = () => {
                 }
 
                 return (
-                  <span className="flex items-center flex-wrap gap-2">
+                  <span className="flex items-center gap-2 flex-nowrap whitespace-nowrap overflow-x-auto">
                       <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-2 py-1">
                         <Timer className="h-3.5 w-3.5 text-primary" />
                         <span className="font-semibold tabular-nums">{String(countdown.days).padStart(2, '0')}</span>
