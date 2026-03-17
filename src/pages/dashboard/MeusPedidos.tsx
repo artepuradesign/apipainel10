@@ -915,7 +915,7 @@ const MeusPedidos = () => {
             <div className="space-y-4 text-sm">
               <StatusTracker pedido={selectedPedido} />
 
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-[112px_minmax(0,1fr)] items-start gap-x-2 gap-y-2">
                 {selectedPedido.type === 'pdf-rg' ? (
                   <>
                     {selectedPedido.cpf && <><span className="text-muted-foreground">CPF:</span><span className="font-mono">{selectedPedido.cpf}</span></>}
@@ -962,7 +962,7 @@ const MeusPedidos = () => {
                   }
 
                   return (
-                    <span className="flex items-center flex-wrap gap-2">
+                    <span className="flex items-center flex-nowrap gap-1.5 whitespace-nowrap overflow-x-auto">
                       <span className="inline-flex items-center gap-1 rounded-md border border-border bg-muted px-2 py-1">
                         <Timer className="h-3.5 w-3.5 text-primary" />
                         <span className="font-semibold tabular-nums">{String(countdown.days).padStart(2, '0')}</span>
