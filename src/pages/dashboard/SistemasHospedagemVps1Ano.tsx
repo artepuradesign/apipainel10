@@ -16,7 +16,7 @@ import { usePixPaymentFlow } from '@/hooks/usePixPaymentFlow';
 import { useUserDataApi } from '@/hooks/useUserDataApi';
 import PixQRCodeModal from '@/components/payment/PixQRCodeModal';
 import { getModulePrice } from '@/utils/modulePrice';
-import { sistemasHospedagemVps6Service, type SistemaHospedagemVps6Registro } from '@/services/sistemasHospedagemVps6Service';
+import { sistemasHospedagemVps1AnoService, type SistemaHospedagemVps1AnoRegistro } from '@/services/sistemasHospedagemVps1AnoService';
 import SimpleTitleBar from '@/components/dashboard/SimpleTitleBar';
 
 const MODULE_ID = 177;
