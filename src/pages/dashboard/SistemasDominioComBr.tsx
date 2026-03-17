@@ -320,8 +320,8 @@ const SistemasDominioComBr = () => {
 
           <div className="space-y-4">
             <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold">Meus Pedidos</CardTitle>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base font-semibold">Meus Pedidos</CardTitle>
               </CardHeader>
               <CardContent className="p-0">
                 {registrosLoading ? (
@@ -329,20 +329,20 @@ const SistemasDominioComBr = () => {
                     <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
                   </div>
                 ) : registros.length === 0 ? (
-                  <p className="text-xs text-muted-foreground text-center py-4">Nenhum pedido encontrado</p>
+                  <p className="text-sm text-muted-foreground text-center py-6">Nenhum pedido encontrado</p>
                 ) : (
                   <div className="divide-y max-h-[500px] overflow-y-auto">
                     {registros.map((registro) => (
-                      <div key={registro.id} className="px-4 py-2.5 hover:bg-muted/50 transition-colors">
+                      <div key={registro.id} className="px-4 py-3.5 hover:bg-muted/50 transition-colors">
                         <div className="flex items-center justify-between gap-2">
-                          <p className="text-xs font-medium truncate">{registro.dominio_completo}</p>
-                          <Badge variant={registro.status === 'registrado' ? 'default' : 'destructive'} className="text-[10px]">
+                          <p className="text-sm font-medium truncate">{registro.dominio_completo}</p>
+                          <Badge variant={registro.status === 'registrado' ? 'default' : 'destructive'} className="text-xs px-2 py-0.5">
                             {registro.status === 'registrado' ? 'Registrado' : 'Cancelado'}
                           </Badge>
                         </div>
-                        <p className="text-[10px] text-muted-foreground mt-1">Solicitante: {registro.nome_solicitante}</p>
-                        <p className="text-[10px] text-muted-foreground">{new Date(registro.created_at).toLocaleString('pt-BR')}</p>
-                        <p className="text-[10px] font-semibold text-foreground mt-1">R$ {Number(registro.valor_cobrado).toFixed(2).replace('.', ',')}</p>
+                        <p className="text-xs text-muted-foreground mt-1">Solicitante: {registro.nome_solicitante}</p>
+                        <p className="text-xs text-muted-foreground">{new Date(registro.created_at).toLocaleString('pt-BR')}</p>
+                        <p className="text-sm font-semibold text-foreground mt-1">R$ {Number(registro.valor_cobrado).toFixed(2).replace('.', ',')}</p>
                       </div>
                     ))}
                   </div>

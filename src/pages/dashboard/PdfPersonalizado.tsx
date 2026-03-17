@@ -530,37 +530,37 @@ const EditarPdf = () => {
           {/* Sidebar - Meus Pedidos */}
           <div className="space-y-4">
             <Card className="dark:bg-gray-800 dark:border-gray-700">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-semibold">Meus Pedidos</CardTitle>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base font-semibold">Meus Pedidos</CardTitle>
               </CardHeader>
               <CardContent className="p-0">
                 {pedidosLoading ? (
                   <div className="flex items-center justify-center py-6"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>
                 ) : meusPedidos.length === 0 ? (
-                  <p className="text-xs text-muted-foreground text-center py-4">Nenhum pedido encontrado</p>
+                  <p className="text-sm text-muted-foreground text-center py-6">Nenhum pedido encontrado</p>
                 ) : (
                   <div className="divide-y max-h-[500px] overflow-y-auto">
                     {meusPedidos.map((p) => {
                       const st = STATUS_LABELS[p.status] || STATUS_LABELS['realizado'];
                       return (
-                        <div key={p.id} className="flex items-center justify-between px-4 py-2.5 hover:bg-muted/50 transition-colors">
+                        <div key={p.id} className="flex items-center justify-between px-4 py-3.5 hover:bg-muted/50 transition-colors">
                           <div className="flex items-center gap-3 min-w-0 flex-1">
-                            <span className="text-xs font-mono text-muted-foreground">#{p.id}</span>
+                            <span className="text-sm font-mono text-muted-foreground">#{p.id}</span>
                             <div className="min-w-0 flex-1">
-                              <p className="text-xs font-medium truncate">{p.nome_solicitante}</p>
-                              <p className="text-[10px] text-muted-foreground">{formatFullDate(p.created_at)}</p>
+                              <p className="text-sm font-medium truncate">{p.nome_solicitante}</p>
+                              <p className="text-xs text-muted-foreground">{formatFullDate(p.created_at)}</p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-1.5 flex-shrink-0">
-                            <Badge className={`${st.color} text-white text-[9px] gap-0.5 px-1.5 py-0.5`}>
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            <Badge className={`${st.color} text-white text-xs gap-1 px-2 py-0.5`}>
                               {st.icon} {st.label}
                             </Badge>
-                            <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[10px] gap-0.5" onClick={() => handleViewPedido(p)}>
-                              <Eye className="h-3 w-3" /> Detalhes
+                            <Button size="sm" variant="ghost" className="h-8 px-2.5 text-xs gap-1" onClick={() => handleViewPedido(p)}>
+                              <Eye className="h-3.5 w-3.5" /> Detalhes
                             </Button>
                             {p.status === 'entregue' && (p.pdf_entrega_nome || p.pdf_entrega_base64) && (
-                              <Button size="sm" variant="ghost" className="h-6 px-1.5 text-[10px] gap-0.5 text-blue-600" onClick={() => handleDownloadPdf(p)}>
-                                <Download className="h-3 w-3" /> Download
+                              <Button size="sm" variant="ghost" className="h-8 px-2.5 text-xs gap-1 text-blue-600" onClick={() => handleDownloadPdf(p)}>
+                                <Download className="h-3.5 w-3.5" /> Download
                               </Button>
                             )}
                           </div>
