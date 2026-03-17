@@ -111,7 +111,8 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({
   const hasAdminDashboard = !!adminDashboardItem;
   const primaryMenuPath = hasAdminDashboard ? '/dashboard/admin' : '/dashboard';
   const primaryMenuLabel = hasAdminDashboard ? adminDashboardItem?.label || content.sidebarOnlinePanels : content.sidebarOnlinePanels;
-  const PrimaryMenuIcon = hasAdminDashboard ? (adminDashboardItem?.icon || Gauge) : Gauge;
+  const onlinePanelsItem = filteredItems.find((item) => item.path === '/dashboard');
+  const PrimaryMenuIcon = hasAdminDashboard ? (adminDashboardItem?.icon || PanelsTopLeft) : (onlinePanelsItem?.icon || PanelsTopLeft);
 
   const handleDashboardClick = useCallback((e: React.MouseEvent) => {
     navigate(primaryMenuPath);

@@ -173,7 +173,7 @@ export const createAssinanteSidebarItems = (handleLogout: () => void, panelMenus
       path: '/dashboard/admin'
     }] : []),
     {
-      icon: Gauge,
+      icon: PanelsTopLeft,
       label: t.onlinePanels,
       path: '/dashboard'
     },
