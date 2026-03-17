@@ -49,6 +49,14 @@ const ApiModulesCardView: React.FC<ApiModulesCardViewProps> = ({
     return acc;
   }, {} as Record<number, Module[]>);
 
+  // Mantém a mesma ordem exibida no /dashboard (ordem dos painéis retornados),
+  // e adiciona no final eventuais painéis órfãos que existirem só na lista de módulos.
+  const panelIdsInDashboardOrder = panels.map((panel) => panel.id).filter((panelId) => !!modulesByPanel[panelId]?.length);
+  const orphanPanelIds = Object.keys(modulesByPanel)
+    .map(Number)
+    .filter((panelId) => !panels.some((panel) => panel.id === panelId));
+  const orderedPanelIds = [...panelIdsInDashboardOrder, ...orphanPanelIds];
+
   const getPanelName = (panelId: number) => {
     const panel = panels.find(p => p.id === panelId);
     return panel?.name || `Painel ${panelId}`;
@@ -62,10 +70,10 @@ const ApiModulesCardView: React.FC<ApiModulesCardViewProps> = ({
   const getPanelTemplate = (panelId: number): 'corporate' | 'creative' | 'minimal' | 'modern' | 'elegant' | 'forest' | 'rose' | 'cosmic' | 'neon' | 'sunset' | 'arctic' | 'volcano' | 'matrix' => {
     const validTemplates = ['corporate', 'creative', 'minimal', 'modern', 'elegant', 'forest', 'rose', 'cosmic', 'neon', 'sunset', 'arctic', 'volcano', 'matrix'];
     const panel = panels.find(p => p.id === panelId);
-    const template = panel?.template && validTemplates.includes(panel.template) 
+    const template = panel?.template && validTemplates.includes(panel.template)
       ? panel.template as 'corporate' | 'creative' | 'minimal' | 'modern' | 'elegant' | 'forest' | 'rose' | 'cosmic' | 'neon' | 'sunset' | 'arctic' | 'volcano' | 'matrix'
       : 'modern';
-    
+
     console.log(`🎨 [TEMPLATE PERSONALIZAÇÃO - MÓDULOS] Painel ${panelId} usando template: ${template} (original: ${panel?.template})`);
     return template;
   };
@@ -73,14 +81,14 @@ const ApiModulesCardView: React.FC<ApiModulesCardViewProps> = ({
   // Função para formatar o preço (SEM R$)
   const formatPrice = (price: number | string) => {
     if (!price && price !== 0) return '0,00';
-    
+
     // Se for string, limpa completamente e reconstrói
     if (typeof price === 'string') {
       // Remove tudo exceto números, vírgulas e pontos
       const cleanPrice = price.replace(/[^\d,\.]/g, '');
-      
+
       if (!cleanPrice) return '0,00';
-      
+
       // Se tem vírgula, assume que já está formatado em BR
       if (cleanPrice.includes(',')) {
         const parts = cleanPrice.split(',');
@@ -88,14 +96,14 @@ const ApiModulesCardView: React.FC<ApiModulesCardViewProps> = ({
           return cleanPrice;
         }
       }
-      
+
       // Converte para número
       const numericValue = parseFloat(cleanPrice.replace(',', '.'));
       if (isNaN(numericValue)) return '0,00';
-      
+
       return numericValue.toFixed(2).replace('.', ',');
     }
-    
+
     // Para números
     const numericValue = typeof price === 'number' ? price : 0;
     return numericValue.toFixed(2).replace('.', ',');
@@ -103,8 +111,9 @@ const ApiModulesCardView: React.FC<ApiModulesCardViewProps> = ({
 
   return (
     <div className="space-y-8">
-      {Object.entries(modulesByPanel).map(([panelId, panelModules]) => {
-        const PanelIcon = getPanelIcon(Number(panelId));
+      {orderedPanelIds.map((panelId) => {
+        const panelModules = modulesByPanel[panelId] || [];
+        const PanelIcon = getPanelIcon(panelId);
         
         return (
           <div key={panelId} className="bg-white/75 dark:bg-gray-800/75 rounded-lg border border-gray-200/75 dark:border-gray-700/75 backdrop-blur-sm">
