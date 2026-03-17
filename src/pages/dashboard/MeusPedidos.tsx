@@ -326,6 +326,38 @@ const MeusPedidos = () => {
   const [selectedPedido, setSelectedPedido] = useState<UnifiedPedido | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [cancelingPedidoKey, setCancelingPedidoKey] = useState<string | null>(null);
+  const [countdownNow, setCountdownNow] = useState(Date.now());
+
+  useEffect(() => {
+    if (!showModal || !selectedPedido) return;
+    const interval = window.setInterval(() => setCountdownNow(Date.now()), 1000);
+    return () => window.clearInterval(interval);
+  }, [showModal, selectedPedido]);
+
+  const getPedidoDeadline = (pedido: UnifiedPedido): string | null => {
+    if (pedido.type === 'vps-6') return getVpsPlanEndAt(pedido);
+    if (pedido.type === 'dominio-com' || pedido.type === 'dominio-com-br') return getDomainPlanEndAt(pedido);
+    return null;
+  };
+
+  const getRemainingCountdown = (deadlineAt: string | null, nowMs: number) => {
+    if (!deadlineAt) return null;
+
+    const deadlineTs = new Date(deadlineAt).getTime();
+    if (Number.isNaN(deadlineTs)) return null;
+
+    const totalSeconds = Math.max(0, Math.floor((deadlineTs - nowMs) / 1000));
+    const days = Math.floor(totalSeconds / 86400);
+    const minutes = Math.floor((totalSeconds % 86400) / 60);
+    const seconds = totalSeconds % 60;
+
+    return {
+      days,
+      minutes,
+      seconds,
+      ended: totalSeconds === 0,
+    };
+  };
 
   const getStepTimestamp = (pedido: UnifiedPedido, step: ActivePedidoStatus): string | null => {
     const map: Record<ActivePedidoStatus, string | null> = {
