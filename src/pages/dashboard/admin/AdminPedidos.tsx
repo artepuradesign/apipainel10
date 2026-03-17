@@ -131,6 +131,13 @@ const formatTime = (dateString: string | null) => {
   return new Date(dateString).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
 };
 
+const formatDateTime = (dateString?: string | null) => {
+  if (!dateString) return '—';
+  const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) return '—';
+  return date.toLocaleString('pt-BR');
+};
+
 const getStatusIndex = (status: PdfRgStatus) => status === 'cancelado' ? -1 : STATUS_ORDER.indexOf(status);
 
 type VpsWorkflowRegistro = SistemaHospedagemVps1MesRegistro | SistemaHospedagemVps6Registro | SistemaHospedagemVps1AnoRegistro;
