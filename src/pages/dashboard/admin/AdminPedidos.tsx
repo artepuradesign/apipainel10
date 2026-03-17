@@ -683,7 +683,8 @@ const AdminPedidos = () => {
           return;
         }
 
-        res = await sistemasHospedagemVps6Service.updateStatusByAdmin(selectedPedido.id, {
+        const vpsService = resolveVpsServiceByDuration(selectedPedido.raw_vps?.duracao_meses);
+        res = await vpsService.updateStatusByAdmin(selectedPedido.id, {
           status: targetStatus,
           ...(workflowIp.trim() ? { ip_vps: workflowIp.trim() } : {}),
         });
