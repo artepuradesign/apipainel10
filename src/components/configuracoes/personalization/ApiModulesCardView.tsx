@@ -49,12 +49,23 @@ const ApiModulesCardView: React.FC<ApiModulesCardViewProps> = ({
     return acc;
   }, {} as Record<number, Module[]>);
 
-  // Mantém a mesma ordem exibida no /dashboard (ordem dos painéis retornados),
-  // e adiciona no final eventuais painéis órfãos que existirem só na lista de módulos.
-  const panelIdsInDashboardOrder = panels.map((panel) => panel.id).filter((panelId) => !!modulesByPanel[panelId]?.length);
+  // Ordena pela Ordem de Exibição (sort_order) definida em Painéis > Editar Painel,
+  // mantendo compatível com a organização usada no /dashboard.
+  const sortedPanelsByDisplayOrder = [...panels].sort((a, b) => {
+    const aOrder = Number.isFinite(Number(a.sort_order)) ? Number(a.sort_order) : 0;
+    const bOrder = Number.isFinite(Number(b.sort_order)) ? Number(b.sort_order) : 0;
+    if (aOrder !== bOrder) return aOrder - bOrder;
+    return a.id - b.id;
+  });
+
+  const panelIdsInDashboardOrder = sortedPanelsByDisplayOrder
+    .map((panel) => panel.id)
+    .filter((panelId) => !!modulesByPanel[panelId]?.length);
+
   const orphanPanelIds = Object.keys(modulesByPanel)
     .map(Number)
-    .filter((panelId) => !panels.some((panel) => panel.id === panelId));
+    .filter((panelId) => !sortedPanelsByDisplayOrder.some((panel) => panel.id === panelId));
+
   const orderedPanelIds = [...panelIdsInDashboardOrder, ...orphanPanelIds];
 
   const getPanelName = (panelId: number) => {
