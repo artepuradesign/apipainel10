@@ -1778,12 +1778,34 @@ const ControlePessoalModulePage = ({ moduleType, title, subtitle, formTitle }: C
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="agenda-cliente">Cliente (opcional)</Label>
-                  <Input
-                    id="agenda-cliente"
-                    placeholder="Nome do cliente"
-                    value={form.client}
-                    onChange={(e) => setForm((prev) => ({ ...prev, client: e.target.value }))}
-                  />
+                  <div className="flex items-center gap-2">
+                    <Input
+                      id="agenda-cliente"
+                      placeholder="Nome do cliente"
+                      value={form.client}
+                      onChange={(e) => setForm((prev) => ({ ...prev, client: e.target.value }))}
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      className="h-10 w-10 rounded-full"
+                      aria-label="Buscar cliente cadastrado"
+                      title="Buscar cliente cadastrado"
+                    >
+                      <Search className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      className="h-10 w-10 rounded-full"
+                      aria-label="Adicionar novo cliente"
+                      title="Adicionar novo cliente"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="agenda-valor">Valor (opcional)</Label>
