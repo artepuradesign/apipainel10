@@ -1694,7 +1694,7 @@ const ControlePessoalModulePage = ({ moduleType, title, subtitle, formTitle }: C
 
       {isAgenda ? (
         <Dialog open={isAgendaModalOpen} onOpenChange={(open) => (open ? setIsAgendaModalOpen(true) : handleCloseAgendaModal())}>
-          <DialogContent className="sm:max-w-xl">
+          <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{editingRecordId ? 'Editar compromisso' : 'Novo compromisso'}</DialogTitle>
               <DialogDescription>Arraste o intervalo de horário; períodos já ocupados ficam bloqueados automaticamente.</DialogDescription>
@@ -1712,18 +1712,40 @@ const ControlePessoalModulePage = ({ moduleType, title, subtitle, formTitle }: C
               </div>
 
               <div className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="agenda-data">Data</Label>
-                  <Input
-                    id="agenda-data"
-                    type="date"
-                    value={form.date}
-                    onChange={(e) => {
-                      const nextDate = e.target.value;
-                      setForm((prev) => ({ ...prev, date: nextDate }));
-                      if (nextDate) setSelectedDate(nextDate);
-                    }}
-                  />
+                <div className="grid gap-3 sm:grid-cols-3">
+                  <div className="space-y-2">
+                    <Label htmlFor="agenda-data">Data</Label>
+                    <Input
+                      id="agenda-data"
+                      type="date"
+                      value={form.date}
+                      onChange={(e) => {
+                        const nextDate = e.target.value;
+                        setForm((prev) => ({ ...prev, date: nextDate }));
+                        if (nextDate) setSelectedDate(nextDate);
+                      }}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="agenda-inicio">Hora de início</Label>
+                    <Input
+                      id="agenda-inicio"
+                      type="time"
+                      step={900}
+                      value={form.time}
+                      onChange={(e) => setForm((prev) => ({ ...prev, time: e.target.value }))}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="agenda-termino">Hora de término</Label>
+                    <Input
+                      id="agenda-termino"
+                      type="time"
+                      step={900}
+                      value={form.endTime}
+                      onChange={(e) => setForm((prev) => ({ ...prev, endTime: e.target.value }))}
+                    />
+                  </div>
                 </div>
 
                 <AgendaTimeRangePicker
@@ -1738,17 +1760,6 @@ const ControlePessoalModulePage = ({ moduleType, title, subtitle, formTitle }: C
                     }));
                   }}
                 />
-
-                <div className="grid gap-3 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="agenda-inicio">Hora de início</Label>
-                    <Input id="agenda-inicio" value={form.time} readOnly />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="agenda-termino">Hora de término</Label>
-                    <Input id="agenda-termino" value={form.endTime} readOnly />
-                  </div>
-                </div>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
